@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Schools{% endblock %}
+{% block page_title %}Schools{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'schools:school_add' %}" class="btn btn-gold">+ Add School</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-2">
+  <form method="get">
+    <input type="text" name="q" class="form-input" placeholder="Search schools..." value="{{ query }}" style="max-width: 320px;">
+  </form>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table stack-on-mobile">
+      <thead>
+        <tr>
+          <th>School</th>
+          <th>Contact Person</th>
+          <th>SMS Balance</th>
+          <th>Sender ID</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for school in schools %}
+        <tr>
+          <td data-label="School">{{ school.name }}</td>
+          <td data-label="Contact Person">{{ school.contact_person }}</td>
+          <td data-label="SMS Balance">
+            {% if school.sms_balance < 20 %}<span class="text-error font-bold">{{ school.sms_balance }}</span>
+            {% elif school.sms_balance < 100 %}<span class="text-gold font-bold">{{ school.sms_balance }}</span>
+            {% else %}<span class="text-success font-bold">{{ school.sms_balance }}</span>{% endif %}
+          </td>
+          <td data-label="Sender ID">
+            {% if school.sender_id_status == 'approved' %}<span class="badge badge-success">{{ school.sender_id }}</span>
+            {% elif school.sender_id_status == 'pending' %}<span class="badge badge-warning">Pending</span>
+            {% elif school.sender_id_status == 'rejected' %}<span class="badge badge-error">Rejected</span>
+            {% else %}<span class="badge badge-gray">Not Requested</span>{% endif %}
+          </td>
+          <td data-label="Status">
+            {% if school.is_active %}<span class="badge badge-success">Active</span>
+            {% else %}<span class="badge badge-gray">Inactive</span>{% endif %}
+          </td>
+          <td data-label="" class="flex-gap">
+            <a href="{% url 'schools:school_edit' school.pk %}" class="btn btn-sm btn-outline">Edit</a>
+            <a href="{% url 'schools:school_topup' school.pk %}" class="btn btn-sm btn-gold">Top Up</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">
+          <div class="empty-state">
+            <div class="empty-icon">🏫</div>
+            <div class="empty-title">No schools yet</div>
+            <div class="empty-desc">Add your first school to get started.</div>
+            <div class="empty-actions">
+              <a href="{% url 'schools:school_add' %}" class="btn btn-gold">+ Add the first school</a>
+            </div>
+          </div>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if schools %}<div class="table-scroll-hint">← scroll →</div>{% endif %}
+</div>
+{% endblock %}

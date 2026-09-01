@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Groups{% endblock %}
+{% block page_title %}Contact Groups{% endblock %}
+
+{% block content %}
+<div class="grid grid-2" style="align-items:start;">
+  <div class="card">
+    <div class="card-header">Groups</div>
+    <div class="table-wrap">
+      <table class="data-table stack-on-mobile">
+        <thead><tr><th>Name</th><th>Contacts</th></tr></thead>
+        <tbody>
+          {% for group in groups %}
+          <tr>
+            <td data-label="Name">{{ group.name }}</td>
+            <td data-label="Contacts">{{ group.contact_count }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="2"><div class="empty-state">No groups yet.</div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Add Group</div>
+    <form method="post" action="{% url 'contacts:group_add' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Group Name</label>
+        <input type="text" name="name" class="form-input" placeholder="e.g. Darasa la 3" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Create Group</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

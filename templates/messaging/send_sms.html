@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Send SMS{% endblock %}
+{% block page_title %}Send SMS{% endblock %}
+
+{% block content %}
+{% if school.sms_balance == 0 %}
+<div class="card">
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <div class="empty-title">Salio lako ni sifuri</div>
+    <div class="empty-desc">Huwezi kutuma ujumbe bila salio. Wasiliana na Notifi kupata SMS zaidi.</div>
+    <div class="empty-actions">
+      <a href="tel:{{ support_phone }}" class="btn btn-gold">📞 Piga Simu Sasa</a>
+      <a href="https://wa.me/{{ support_whatsapp }}" class="btn btn-outline" target="_blank" rel="noopener">💬 WhatsApp</a>
+    </div>
+  </div>
+</div>
+{% else %}
+
+<div class="page-hint" id="hint-sms">
+  <span>💡 <strong>Kidokezo:</strong> Ujumbe mfupi kuliko herufi 160 unagharimu SMS 1 tu. Angalia kihesabu cha herufi chini ya sanduku la ujumbe.</span>
+  <button onclick="dismissHint('hint-sms')" class="hint-dismiss">✕</button>
+</div>
+
+<div class="steps">
+  <div class="step active"><span class="step-circle">1</span> Select Group</div>
+  <div class="step-line"></div>
+  <div class="step active"><span class="step-circle">2</span> Compose</div>
+  <div class="step-line"></div>
+  <div class="step active"><span class="step-circle">3</span> Review &amp; Send</div>
+</div>
+
+<form id="send-sms-form" action="{% url 'messaging:send_sms_submit' %}" method="post">
+  {% csrf_token %}
+  <div class="grid grid-2" style="align-items:start;">
+    <div class="card">
+      <div class="card-header">1. Select Group</div>
+      <div class="form-group">
+        <label class="form-label">Recipient Group</label>
+        <select name="group" id="group-select" class="form-input">
+          <option value="all" data-count="{{ school.contacts.count }}">All Contacts ({{ school.contacts.count }})</option>
+          {% for group in groups %}
+          <option value="{{ group.id }}" data-count="{{ group.contact_count }}">{{ group.name }} ({{ group.contact_count }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="card-header mt-2">2. Compose Message</div>
+      <div class="form-group">
+        <div class="tabs mb-1">
+          {% for tpl in templates %}
+          <span class="template-pill" data-content="{{ tpl.content }}">{{ tpl.name }}</span>
+          {% endfor %}
+        </div>
+        <textarea name="message" id="message-content" class="form-input" rows="6" placeholder="Type your message here..." required></textarea>
+        <div class="char-counter ok" id="char-counter">0 chars</div>
+      </div>
+
+      <div class="alert alert-error" id="insufficient-warning" style="display:none;">
+        ⚠️ Insufficient balance for this message.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">3. Preview &amp; Send</div>
+      <div class="card mb-2 preview-card" id="preview-card" style="background: var(--bg);">
+        <div id="preview-content" class="text-secondary" style="white-space: pre-wrap;">Your message preview will appear here...</div>
+      </div>
+
+      <div class="flex-between mb-1">
+        <span class="text-secondary">Recipients</span>
+        <span class="font-bold" id="recipient-count">0</span>
+      </div>
+      <div class="flex-between mb-1">
+        <span class="text-secondary">Credits Needed</span>
+        <span class="font-bold" id="credits-needed">0</span>
+      </div>
+      <div class="flex-between mb-2">
+        <span class="text-secondary">Balance After Sending</span>
+        <span class="font-bold" id="balance-after">{{ school.sms_balance }}</span>
+      </div>
+
+      <div class="flex-between mb-2">
+        <span class="text-secondary">Sender ID</span>
+        <span class="badge badge-blue">{{ sender_id }}</span>
+      </div>
+
+      <button type="submit" class="btn btn-gold btn-lg btn-block send-sms-btn-mobile" id="send-sms-btn" data-balance="{{ school.sms_balance }}" disabled>
+        Send SMS
+      </button>
+    </div>
+  </div>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/send_sms.js' %}"></script>
+{% endblock %}

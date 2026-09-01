@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Transactions{% endblock %}
+{% block page_title %}Transactions{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table stack-on-mobile">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>School</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Balance Before</th>
+          <th>Balance After</th>
+          <th>Description</th>
+          <th>Reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tx in transactions %}
+        <tr>
+          <td data-label="Date">{{ tx.created_at|date:"d M Y, H:i" }}</td>
+          <td data-label="School">{{ tx.school.name }}</td>
+          <td data-label="Type">
+            {% if tx.type == 'credit_added' %}<span class="badge badge-gold">Top Up</span>
+            {% elif tx.type == 'sms_sent' %}<span class="badge badge-blue">SMS Sent</span>
+            {% else %}<span class="badge badge-gray">{{ tx.get_type_display }}</span>{% endif %}
+          </td>
+          <td data-label="Amount" class="{% if tx.amount < 0 %}text-error{% else %}text-success{% endif %} font-bold">
+            {{ tx.amount }}
+          </td>
+          <td data-label="Balance Before">{{ tx.balance_before }}</td>
+          <td data-label="Balance After">{{ tx.balance_after }}</td>
+          <td data-label="Description">{{ tx.description }}</td>
+          <td data-label="Reference">{{ tx.reference|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8"><div class="empty-state">No transactions yet.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if transactions %}<div class="table-scroll-hint">← scroll →</div>{% endif %}
+</div>
+{% endblock %}

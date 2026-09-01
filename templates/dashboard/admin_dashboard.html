@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'schools:school_add' %}" class="btn btn-gold">+ Add School</a>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-4 mb-2">
+  <div class="stat-card blue-accent">
+    <div class="stat-label">Total Schools</div>
+    <div class="stat-value">{{ total_schools }}</div>
+  </div>
+  <div class="stat-card gold-accent">
+    <div class="stat-label">SMS Sent</div>
+    <div class="stat-value">{{ total_sms_this_month }}</div>
+    <div class="stat-sub">this month</div>
+  </div>
+  <div class="stat-card blue-accent">
+    <div class="stat-label">Credits Sold</div>
+    <div class="stat-value">{{ total_credits_sold }}</div>
+  </div>
+  <div class="stat-card green-accent">
+    <div class="stat-label">Active Schools</div>
+    <div class="stat-value">{{ active_schools }}</div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="align-items: start;">
+  <div class="card">
+    <div class="card-header">
+      Schools
+      <a href="{% url 'schools:schools_list' %}" class="text-secondary" style="font-size:13px;">View all →</a>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table stack-on-mobile">
+        <thead>
+          <tr><th>School</th><th>Balance</th><th>Sender ID</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for school in schools %}
+          <tr>
+            <td data-label="School">{{ school.name }}</td>
+            <td data-label="Balance">
+              {% if school.sms_balance < 20 %}<span class="text-error font-bold">{{ school.sms_balance }}</span>
+              {% elif school.sms_balance < 100 %}<span class="text-gold font-bold">{{ school.sms_balance }}</span>
+              {% else %}<span class="text-success font-bold">{{ school.sms_balance }}</span>{% endif %}
+            </td>
+            <td data-label="Sender ID">
+              {% if school.sender_id_status == 'approved' %}<span class="badge badge-success">{{ school.sender_id }}</span>
+              {% elif school.sender_id_status == 'pending' %}<span class="badge badge-warning">Pending</span>
+              {% else %}<span class="badge badge-gray">NOTIFI</span>{% endif %}
+            </td>
+            <td data-label=""><a href="{% url 'schools:school_topup' school.pk %}" class="btn btn-sm btn-gold">Top Up</a></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4"><div class="empty-state">No schools yet.</div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      Recent Transactions
+      <a href="{% url 'schools:transactions_list' %}" class="text-secondary" style="font-size:13px;">View all →</a>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table stack-on-mobile">
+        <thead>
+          <tr><th>School</th><th>Type</th><th>Amount</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          {% for tx in recent_transactions %}
+          <tr>
+            <td data-label="School">{{ tx.school.name }}</td>
+            <td data-label="Type">
+              {% if tx.type == 'credit_added' %}<span class="badge badge-gold">Top Up</span>
+              {% elif tx.type == 'sms_sent' %}<span class="badge badge-blue">SMS Sent</span>
+              {% else %}<span class="badge badge-gray">{{ tx.get_type_display }}</span>{% endif %}
+            </td>
+            <td data-label="Amount">{{ tx.amount }}</td>
+            <td data-label="Date">{{ tx.created_at|date:"d M, H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4"><div class="empty-state">No transactions yet.</div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

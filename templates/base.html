@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Notifi{% endblock %} — Notifi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔔</text></svg>">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><span class="bell">🔔</span> Notifi</div>
+
+      <nav class="sidebar-nav">
+        {% with app=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
+        <a href="{% url 'dashboard:index' %}" class="nav-item {% if app == 'dashboard' %}active{% endif %}">
+          <span class="icon">🏠</span> Dashboard
+        </a>
+
+        {% if user.is_school_admin %}
+          <a href="{% url 'messaging:send_sms' %}" class="nav-item {% if app == 'messaging' and url_name == 'send_sms' %}active{% endif %}">
+            <span class="icon">✉️</span> Send SMS
+          </a>
+          <a href="{% url 'contacts:contacts_list' %}" class="nav-item {% if app == 'contacts' %}active{% endif %}">
+            <span class="icon">👥</span> Contacts
+          </a>
+          <a href="{% url 'messaging:templates_list' %}" class="nav-item {% if app == 'messaging' and url_name == 'templates_list' %}active{% endif %}">
+            <span class="icon">📄</span> Templates
+          </a>
+          <a href="{% url 'messaging:reports' %}" class="nav-item {% if app == 'messaging' and url_name == 'reports' %}active{% endif %}">
+            <span class="icon">📊</span> Reports
+          </a>
+        {% endif %}
+
+        {% if user.is_platform_admin %}
+          <a href="{% url 'schools:schools_list' %}" class="nav-item {% if app == 'schools' and url_name == 'schools_list' %}active{% endif %}">
+            <span class="icon">🏫</span> Schools
+          </a>
+          <a href="{% url 'schools:transactions_list' %}" class="nav-item {% if app == 'schools' and url_name == 'transactions_list' %}active{% endif %}">
+            <span class="icon">💳</span> Transactions
+          </a>
+        {% endif %}
+        {% endwith %}
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+        <div class="user-role">
+          {% if user.is_platform_admin %}Platform Admin{% else %}{{ user.school.name|default:"School Admin" }}{% endif %}
+        </div>
+        <a href="{% url 'logout' %}" class="logout-link">Log out</a>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="topbar">
+        <div>
+          <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
+          <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+          {% block page_subtitle %}{% endblock %}
+        </div>
+        {% block topbar_actions %}{% endblock %}
+      </div>
+
+      <div class="page-body">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" data-autodismiss>
+              {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}⚠️{% else %}ℹ️{% endif %}
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  {% with app=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a href="{% url 'dashboard:index' %}" class="bottom-nav-item {% if app == 'dashboard' %}active{% endif %}">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+
+      {% if user.is_school_admin %}
+        <a href="{% url 'messaging:send_sms' %}" class="bottom-nav-item {% if app == 'messaging' and url_name == 'send_sms' %}active{% endif %}">
+          <span class="icon">✉️</span> Send SMS
+        </a>
+        <a href="{% url 'contacts:contacts_list' %}" class="bottom-nav-item {% if app == 'contacts' %}active{% endif %}">
+          <span class="icon">👥</span> Contacts
+        </a>
+        <a href="{% url 'messaging:reports' %}" class="bottom-nav-item {% if app == 'messaging' and url_name == 'reports' %}active{% endif %}">
+          <span class="icon">📊</span> Reports
+        </a>
+      {% endif %}
+
+      {% if user.is_platform_admin %}
+        <a href="{% url 'schools:schools_list' %}" class="bottom-nav-item {% if app == 'schools' and url_name == 'schools_list' %}active{% endif %}">
+          <span class="icon">🏫</span> Schools
+        </a>
+        <a href="{% url 'schools:transactions_list' %}" class="bottom-nav-item {% if app == 'schools' and url_name == 'transactions_list' %}active{% endif %}">
+          <span class="icon">💳</span> Transactions
+        </a>
+      {% endif %}
+
+      <button type="button" class="bottom-nav-item" id="mobile-more-toggle">
+        <span class="icon">☰</span> More
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer-handle"></div>
+    {% if user.is_school_admin %}
+      <a href="{% url 'messaging:templates_list' %}" class="nav-item {% if app == 'messaging' and url_name == 'templates_list' %}active{% endif %}">
+        <span class="icon">📄</span> Templates
+      </a>
+    {% endif %}
+    <a href="{% url 'logout' %}" class="nav-item">
+      <span class="icon">🚪</span> Sign Out
+    </a>
+  </div>
+  {% endwith %}
+
+  <div class="toast-container"></div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Sent{% endblock %}
+{% block page_title %}Message Sent{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 480px; text-align: center;">
+  <div style="font-size: 48px;">✅</div>
+  <h2 class="mt-1">Message sent successfully!</h2>
+  <p class="text-secondary mt-1">Your SMS has been queued for delivery to {{ message_obj.group_name_snapshot }}.</p>
+
+  <div class="grid grid-2 mt-2" style="text-align:left;">
+    <div class="stat-card blue-accent">
+      <div class="stat-label">Recipients</div>
+      <div class="stat-value">{{ message_obj.recipient_count }}</div>
+    </div>
+    <div class="stat-card gold-accent">
+      <div class="stat-label">Credits Used</div>
+      <div class="stat-value">{{ message_obj.credits_used }}</div>
+    </div>
+  </div>
+
+  <div class="alert alert-success mt-2">
+    Remaining balance: <strong>{{ school.sms_balance }}</strong> credits
+  </div>
+
+  <a href="{% url 'dashboard:index' %}" class="btn btn-primary btn-block mt-1">Back to Dashboard</a>
+</div>
+{% endblock %}

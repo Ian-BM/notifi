@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports{% endblock %}
+{% block page_title %}Message Reports{% endblock %}
+
+{% block content %}
+<div class="page-hint" id="hint-reports">
+  <span>💡 <strong>Kidokezo:</strong> Hapa unaona ujumbe wote uliotumwa, ni wangapi walipokea, na ni wangapi hawakupokea.</span>
+  <button onclick="dismissHint('hint-reports')" class="hint-dismiss">✕</button>
+</div>
+
+{% if message_list %}
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table stack-on-mobile">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Group</th>
+          <th>Message</th>
+          <th>Recipients</th>
+          <th>Delivered</th>
+          <th>Failed</th>
+          <th>Credits</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in message_list %}
+        <tr>
+          <td data-label="Date">{{ msg.sent_at|date:"d M Y, H:i" }}</td>
+          <td data-label="Group">{{ msg.group_name_snapshot }}</td>
+          <td data-label="Message" style="max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ msg.content }}</td>
+          <td data-label="Recipients">{{ msg.recipient_count }}</td>
+          <td data-label="Delivered">{{ msg.delivered_count }} ({{ msg.delivery_rate }}%)</td>
+          <td data-label="Failed">{{ msg.failed_count }}</td>
+          <td data-label="Credits">{{ msg.credits_used }}</td>
+          <td data-label="Status">
+            {% if msg.status == 'sent' %}<span class="badge badge-success">Sent</span>
+            {% elif msg.status == 'failed' %}<span class="badge badge-error">Failed</span>
+            {% elif msg.status == 'partial' %}<span class="badge badge-warning">Partial</span>
+            {% else %}<span class="badge badge-gray">Pending</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="table-scroll-hint">← scroll →</div>
+</div>
+{% else %}
+<div class="card">
+  <div class="empty-state">
+    <div class="empty-icon">✉️</div>
+    <div class="empty-title">Bado hujatuma ujumbe wowote</div>
+    <div class="empty-desc">Tuma ujumbe wako wa kwanza kwa wazazi au walimu.</div>
+    <div class="empty-actions">
+      <a href="{% url 'messaging:send_sms' %}" class="btn btn-gold">Tuma SMS ya Kwanza →</a>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

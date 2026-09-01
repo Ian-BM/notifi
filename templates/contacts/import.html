@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Contacts{% endblock %}
+{% block page_title %}Import Contacts{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 640px;">
+  <form method="post" enctype="multipart/form-data" id="csv-import-form">
+    {% csrf_token %}
+
+    <div class="upload-zone" id="csv-drop-zone">
+      <div style="font-size: 32px;">📁</div>
+      <div class="upload-zone-text mt-1">Drag &amp; drop your CSV file here, or click to browse</div>
+      <input type="file" name="csv_file" id="csv-file-input" accept=".csv" style="display:none;" required>
+    </div>
+
+    <div id="csv-preview-table" class="mt-1" style="display:none; overflow-x:auto;"></div>
+
+    <div class="form-row mt-2">
+      <div class="form-group">
+        <label class="form-label">Name column</label>
+        <select name="name_column" id="id_name_column" class="form-input"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone column</label>
+        <select name="phone_column" id="id_phone_column" class="form-input"></select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Add to group (optional)</label>
+      <select name="group" class="form-input">
+        <option value="">No group</option>
+        {% for group in groups %}
+        <option value="{{ group.id }}">{{ group.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="csv-import-submit" disabled>Import Contacts</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/contacts.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Templates{% endblock %}
+{% block page_title %}Message Templates{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-gold" data-modal-open="add-template-modal">+ New Template</button>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+  {% for tpl in templates %}
+  <div class="card">
+    <div class="card-header">
+      {{ tpl.name }}
+      {% if tpl.is_global %}
+        <span class="badge badge-blue">Global</span>
+      {% else %}
+        <form method="post" action="{% url 'messaging:template_delete' tpl.pk %}" data-confirm="Delete this template?">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-outline">Delete</button>
+        </form>
+      {% endif %}
+    </div>
+    <p class="text-secondary" style="white-space: pre-wrap;">{{ tpl.content }}</p>
+  </div>
+  {% empty %}
+  <div class="empty-state">
+    <div class="icon">📄</div>
+    No templates yet.
+  </div>
+  {% endfor %}
+</div>
+
+<div class="modal-overlay" id="add-template-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>New Template</h3>
+      <button class="modal-close" data-modal-close>&times;</button>
+    </div>
+    <form method="post" action="{% url 'messaging:template_add' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Template Name</label>
+        <input type="text" name="name" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content</label>
+        <textarea name="content" class="form-input" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Save Template</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

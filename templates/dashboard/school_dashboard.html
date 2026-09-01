@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 0.25rem;">Good day, {{ school.contact_person }} 👋</h2>
+<p class="text-secondary mb-2">Here's what's happening with {{ school.name }} today.</p>
+
+{% if low_balance %}
+  <div class="alert alert-warning">
+    ⚠️ Your SMS balance is low ({{ school.sms_balance }} credits left). Contact Notifi to top up.
+  </div>
+{% endif %}
+
+{% if just_completed_onboarding %}
+  <div class="onboarding-complete-banner" id="onboarding-complete-banner" data-autohide>
+    🎉 <span>You're all set! Your Notifi account is fully set up.</span>
+  </div>
+{% elif show_onboarding %}
+  <div class="onboarding-card">
+    <div class="onboarding-header">
+      <div>
+        <div class="onboarding-title">Kamilisha usanidi wako</div>
+        <div class="onboarding-sub">Complete your setup to get the most out of Notifi</div>
+      </div>
+      <div class="onboarding-pct">{{ onboarding.completion_percentage }}%</div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" style="width: {{ onboarding.completion_percentage }}%"></div>
+    </div>
+
+    <div class="onboarding-steps">
+      <div class="onboarding-step {% if onboarding.step_contacts_done %}done{% endif %}">
+        <div class="step-check">{% if onboarding.step_contacts_done %}✓{% else %}1{% endif %}</div>
+        <div class="step-info">
+          <div class="step-name">Ongeza wazazi na walimu</div>
+          <div class="step-hint">Ingiza namba za simu kwa mkono au pakia faili la Excel</div>
+        </div>
+        {% if not onboarding.step_contacts_done %}
+        <a href="{% url 'contacts:contacts_list' %}" class="btn btn-sm btn-primary">Anza →</a>
+        {% else %}
+        <span class="badge badge-success">Imekamilika</span>
+        {% endif %}
+      </div>
+
+      <div class="onboarding-step {% if onboarding.step_sms_done %}done{% endif %}">
+        <div class="step-check">{% if onboarding.step_sms_done %}✓{% else %}2{% endif %}</div>
+        <div class="step-info">
+          <div class="step-name">Tuma SMS yako ya kwanza</div>
+          <div class="step-hint">Jaribu kutuma ujumbe kwa kikundi kimoja</div>
+        </div>
+        {% if not onboarding.step_sms_done %}
+        <a href="{% url 'messaging:send_sms' %}" class="btn btn-sm btn-gold">Tuma →</a>
+        {% else %}
+        <span class="badge badge-success">Imekamilika</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="grid grid-3 mb-2">
+  <div class="stat-card blue-accent">
+    <div class="stat-label">SMS Balance</div>
+    <div class="stat-value">{{ school.sms_balance }}</div>
+    <div class="stat-sub">credits remaining</div>
+  </div>
+  <div class="stat-card gold-accent">
+    <div class="stat-label">Messages Sent</div>
+    <div class="stat-value">{{ messages_this_month }}</div>
+    <div class="stat-sub">this month</div>
+  </div>
+  <div class="stat-card blue-accent">
+    <div class="stat-label">Contacts</div>
+    <div class="stat-value">{{ contacts_total }}</div>
+    <div class="stat-sub">total saved</div>
+  </div>
+</div>
+
+<div class="flex-gap action-buttons mb-2">
+  <a href="{% url 'messaging:send_sms' %}" class="btn btn-primary btn-lg">✉️ Send SMS</a>
+  <a href="{% url 'contacts:contacts_list' %}" class="btn btn-outline btn-lg">View Contacts</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Recent Messages
+    <a href="{% url 'messaging:reports' %}" class="text-secondary" style="font-size:13px;">View all →</a>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table stack-on-mobile">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Group</th>
+          <th>Recipients</th>
+          <th>Credits Used</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in recent_messages %}
+        <tr>
+          <td data-label="Date">{{ msg.sent_at|date:"d M Y, H:i" }}</td>
+          <td data-label="Group">{{ msg.group_name_snapshot }}</td>
+          <td data-label="Recipients">{{ msg.recipient_count }}</td>
+          <td data-label="Credits Used">{{ msg.credits_used }}</td>
+          <td data-label="Status">
+            {% if msg.status == 'sent' %}<span class="badge badge-success">Sent</span>
+            {% elif msg.status == 'failed' %}<span class="badge badge-error">Failed</span>
+            {% elif msg.status == 'partial' %}<span class="badge badge-warning">Partial</span>
+            {% else %}<span class="badge badge-gray">Pending</span>{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <div class="empty-title">No messages sent yet</div>
+            <div class="empty-desc">Send your first SMS to parents or teachers.</div>
+            <div class="empty-actions">
+              <a href="{% url 'messaging:send_sms' %}" class="btn btn-gold">Send your first SMS →</a>
+            </div>
+          </div>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if recent_messages %}<div class="table-scroll-hint">← scroll →</div>{% endif %}
+</div>
+
+{% if show_welcome_modal %}
+<div class="modal-overlay active" id="welcome-modal">
+  <div class="modal welcome-modal">
+    <div class="welcome-modal-header">
+      <div class="welcome-logo">🔔 Notifi</div>
+      <h2>Karibu, {{ school.contact_person }}!</h2>
+      <p>Akaunti yako iko tayari. Tutakusaidia kuanza kwa hatua 3 rahisi.</p>
+    </div>
+
+    <div class="welcome-steps">
+      <div class="welcome-step">
+        <div class="welcome-step-icon blue">👥</div>
+        <div>
+          <div class="welcome-step-title">Hatua 1: Ongeza Wazazi</div>
+          <div class="welcome-step-desc">Ingiza namba za simu za wazazi na walimu</div>
+        </div>
+      </div>
+      <div class="welcome-step">
+        <div class="welcome-step-icon gold">✉️</div>
+        <div>
+          <div class="welcome-step-title">Hatua 2: Tuma Ujumbe</div>
+          <div class="welcome-step-desc">Chagua kikundi na utume SMS kwa wote</div>
+        </div>
+      </div>
+      <div class="welcome-step">
+        <div class="welcome-step-icon green">📊</div>
+        <div>
+          <div class="welcome-step-title">Hatua 3: Angalia Ripoti</div>
+          <div class="welcome-step-desc">Ona ujumbe uliofika na ambao haukufika</div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-gold btn-lg btn-block" data-modal-close>
+      Anza Sasa →
+    </button>
+    <div class="welcome-support">
+      Una swali? Piga simu: <strong>{{ support_phone }}</strong>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    var banner = document.getElementById('onboarding-complete-banner');
+    if (banner) {
+      setTimeout(function () {
+        banner.style.opacity = '0';
+        setTimeout(function () { banner.remove(); }, 400);
+      }, 3000);
+    }
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}Edit School{% else %}Add School{% endif %}{% endblock %}
+{% block page_title %}{% if is_edit %}Edit {{ school.name }}{% else %}Add School{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 640px;">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">School Name</label>
+        {{ form.name }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact Person</label>
+        {{ form.contact_person }}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        {{ form.phone }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Address</label>
+      {{ form.address }}
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Sender ID</label>
+        {{ form.sender_id }}
+        <div class="form-hint">Max 11 characters, e.g. ST-AGNES</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sender ID Status</label>
+        {{ form.sender_id_status }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      {{ form.notes }}
+    </div>
+
+    {% if not is_edit %}
+      <div class="card-header mt-2">Login Account</div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        {{ user_form.username }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        {{ user_form.password }}
+        <div class="form-hint">{{ user_form.password.help_text }}</div>
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label class="form-label">Active</label>
+        {{ form.is_active }}
+      </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary btn-block mt-1">
+      {% if is_edit %}Save Changes{% else %}Create School{% endif %}
+    </button>
+  </form>
+</div>
+{% endblock %}
