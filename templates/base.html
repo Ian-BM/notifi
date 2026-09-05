@@ -1,46 +1,56 @@
 {% load static %}
+{% load icons %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Notifi{% endblock %} — Notifi</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔔</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/logo_icon.svg' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo_icon.svg' %}">
+  <meta name="theme-color" content="#1e293b">
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <div class="app-layout">
     <aside class="sidebar">
-      <div class="sidebar-logo"><span class="bell">🔔</span> Notifi</div>
+      <div class="sidebar-logo">
+        <a href="{% url 'dashboard:index' %}" class="sidebar-logo-link">
+          <img src="{% static 'images/logo_white.svg' %}" alt="Notifi" height="38">
+        </a>
+      </div>
 
       <nav class="sidebar-nav">
         {% with app=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
         <a href="{% url 'dashboard:index' %}" class="nav-item {% if app == 'dashboard' %}active{% endif %}">
-          <span class="icon">🏠</span> Dashboard
+          <span class="icon">{% icon 'home' 'w-full h-full' %}</span> Dashboard
         </a>
 
         {% if user.is_school_admin %}
           <a href="{% url 'messaging:send_sms' %}" class="nav-item {% if app == 'messaging' and url_name == 'send_sms' %}active{% endif %}">
-            <span class="icon">✉️</span> Send SMS
+            <span class="icon">{% icon 'send' 'w-full h-full' %}</span> Send SMS
           </a>
           <a href="{% url 'contacts:contacts_list' %}" class="nav-item {% if app == 'contacts' %}active{% endif %}">
-            <span class="icon">👥</span> Contacts
+            <span class="icon">{% icon 'users' 'w-full h-full' %}</span> Contacts
           </a>
           <a href="{% url 'messaging:templates_list' %}" class="nav-item {% if app == 'messaging' and url_name == 'templates_list' %}active{% endif %}">
-            <span class="icon">📄</span> Templates
+            <span class="icon">{% icon 'document-text' 'w-full h-full' %}</span> Templates
           </a>
           <a href="{% url 'messaging:reports' %}" class="nav-item {% if app == 'messaging' and url_name == 'reports' %}active{% endif %}">
-            <span class="icon">📊</span> Reports
+            <span class="icon">{% icon 'chart-bar' 'w-full h-full' %}</span> Reports
           </a>
         {% endif %}
 
         {% if user.is_platform_admin %}
           <a href="{% url 'schools:schools_list' %}" class="nav-item {% if app == 'schools' and url_name == 'schools_list' %}active{% endif %}">
-            <span class="icon">🏫</span> Schools
+            <span class="icon">{% icon 'building-library' 'w-full h-full' %}</span> Schools
           </a>
           <a href="{% url 'schools:transactions_list' %}" class="nav-item {% if app == 'schools' and url_name == 'transactions_list' %}active{% endif %}">
-            <span class="icon">💳</span> Transactions
+            <span class="icon">{% icon 'credit-card' 'w-full h-full' %}</span> Transactions
           </a>
         {% endif %}
         {% endwith %}
@@ -51,15 +61,18 @@
         <div class="user-role">
           {% if user.is_platform_admin %}Platform Admin{% else %}{{ user.school.name|default:"School Admin" }}{% endif %}
         </div>
-        <a href="{% url 'logout' %}" class="logout-link">Log out</a>
+        <a href="{% url 'logout' %}" class="logout-link">{% icon 'logout' 'w-3.5 h-3.5' %} Log out</a>
       </div>
     </aside>
 
     <div class="main-content">
       <div class="topbar">
         <div>
-          <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
-          <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+          <button class="mobile-menu-toggle" aria-label="Menu">{% icon 'menu' %}</button>
+          <div class="mobile-topbar-logo">
+            <img src="{% static 'images/logo_dark.svg' %}" alt="Notifi" height="28">
+          </div>
+          <span class="topbar-title page-title-text">{% block page_title %}Dashboard{% endblock %}</span>
           {% block page_subtitle %}{% endblock %}
         </div>
         {% block topbar_actions %}{% endblock %}
@@ -69,7 +82,7 @@
         {% if messages %}
           {% for message in messages %}
             <div class="alert alert-{{ message.tags }}" data-autodismiss>
-              {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}⚠️{% else %}ℹ️{% endif %}
+              {% if message.tags == 'success' %}{% icon 'check-circle' %}{% elif message.tags == 'error' %}{% icon 'warning' %}{% else %}{% icon 'info' %}{% endif %}
               <span>{{ message }}</span>
             </div>
           {% endfor %}
@@ -84,32 +97,32 @@
   <nav class="bottom-nav">
     <div class="bottom-nav-items">
       <a href="{% url 'dashboard:index' %}" class="bottom-nav-item {% if app == 'dashboard' %}active{% endif %}">
-        <span class="icon">🏠</span> Dashboard
+        <span class="icon">{% icon 'home' 'w-full h-full' %}</span> Dashboard
       </a>
 
       {% if user.is_school_admin %}
         <a href="{% url 'messaging:send_sms' %}" class="bottom-nav-item {% if app == 'messaging' and url_name == 'send_sms' %}active{% endif %}">
-          <span class="icon">✉️</span> Send SMS
+          <span class="icon">{% icon 'send' 'w-full h-full' %}</span> Send SMS
         </a>
         <a href="{% url 'contacts:contacts_list' %}" class="bottom-nav-item {% if app == 'contacts' %}active{% endif %}">
-          <span class="icon">👥</span> Contacts
+          <span class="icon">{% icon 'users' 'w-full h-full' %}</span> Contacts
         </a>
         <a href="{% url 'messaging:reports' %}" class="bottom-nav-item {% if app == 'messaging' and url_name == 'reports' %}active{% endif %}">
-          <span class="icon">📊</span> Reports
+          <span class="icon">{% icon 'chart-bar' 'w-full h-full' %}</span> Reports
         </a>
       {% endif %}
 
       {% if user.is_platform_admin %}
         <a href="{% url 'schools:schools_list' %}" class="bottom-nav-item {% if app == 'schools' and url_name == 'schools_list' %}active{% endif %}">
-          <span class="icon">🏫</span> Schools
+          <span class="icon">{% icon 'building-library' 'w-full h-full' %}</span> Schools
         </a>
         <a href="{% url 'schools:transactions_list' %}" class="bottom-nav-item {% if app == 'schools' and url_name == 'transactions_list' %}active{% endif %}">
-          <span class="icon">💳</span> Transactions
+          <span class="icon">{% icon 'credit-card' 'w-full h-full' %}</span> Transactions
         </a>
       {% endif %}
 
       <button type="button" class="bottom-nav-item" id="mobile-more-toggle">
-        <span class="icon">☰</span> More
+        <span class="icon">{% icon 'menu' 'w-full h-full' %}</span> More
       </button>
     </div>
   </nav>
@@ -119,11 +132,11 @@
     <div class="mobile-drawer-handle"></div>
     {% if user.is_school_admin %}
       <a href="{% url 'messaging:templates_list' %}" class="nav-item {% if app == 'messaging' and url_name == 'templates_list' %}active{% endif %}">
-        <span class="icon">📄</span> Templates
+        <span class="icon">{% icon 'document-text' 'w-full h-full' %}</span> Templates
       </a>
     {% endif %}
     <a href="{% url 'logout' %}" class="nav-item">
-      <span class="icon">🚪</span> Sign Out
+      <span class="icon">{% icon 'logout' 'w-full h-full' %}</span> Sign Out
     </a>
   </div>
   {% endwith %}

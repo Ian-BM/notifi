@@ -34,6 +34,9 @@ env/
 ENV/
 .venv/
 
+# Node / Tailwind build tooling
+node_modules/
+
 # Django
 staticfiles/
 db.sqlite3

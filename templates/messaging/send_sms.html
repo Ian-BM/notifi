@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load icons %}
 
 {% block title %}Send SMS{% endblock %}
 {% block page_title %}Send SMS{% endblock %}
@@ -8,20 +9,20 @@
 {% if school.sms_balance == 0 %}
 <div class="card">
   <div class="empty-state">
-    <div class="empty-icon">📭</div>
+    <div class="empty-icon">{% icon 'inbox' 'w-8 h-8' %}</div>
     <div class="empty-title">Salio lako ni sifuri</div>
     <div class="empty-desc">Huwezi kutuma ujumbe bila salio. Wasiliana na Notifi kupata SMS zaidi.</div>
     <div class="empty-actions">
-      <a href="tel:{{ support_phone }}" class="btn btn-gold">📞 Piga Simu Sasa</a>
-      <a href="https://wa.me/{{ support_whatsapp }}" class="btn btn-outline" target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a href="tel:{{ support_phone }}" class="btn btn-gold">{% icon 'phone' 'w-4 h-4' %} Piga Simu Sasa</a>
+      <a href="https://wa.me/{{ support_whatsapp }}" class="btn btn-outline" target="_blank" rel="noopener">{% icon 'chat' 'w-4 h-4' %} WhatsApp</a>
     </div>
   </div>
 </div>
 {% else %}
 
 <div class="page-hint" id="hint-sms">
-  <span>💡 <strong>Kidokezo:</strong> Ujumbe mfupi kuliko herufi 160 unagharimu SMS 1 tu. Angalia kihesabu cha herufi chini ya sanduku la ujumbe.</span>
-  <button onclick="dismissHint('hint-sms')" class="hint-dismiss">✕</button>
+  <span class="flex items-center gap-2.5">{% icon 'light-bulb' %} <span><strong>Kidokezo:</strong> Ujumbe mfupi kuliko herufi 160 unagharimu SMS 1 tu. Angalia kihesabu cha herufi chini ya sanduku la ujumbe.</span></span>
+  <button onclick="dismissHint('hint-sms')" class="hint-dismiss">{% icon 'x-mark' %}</button>
 </div>
 
 <div class="steps">
@@ -59,13 +60,13 @@
       </div>
 
       <div class="alert alert-error" id="insufficient-warning" style="display:none;">
-        ⚠️ Insufficient balance for this message.
+        {% icon 'warning' %} Insufficient balance for this message.
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">3. Preview &amp; Send</div>
-      <div class="card mb-2 preview-card" id="preview-card" style="background: var(--bg);">
+      <div class="card mb-2 preview-card bg-[#f8faff]" id="preview-card">
         <div id="preview-content" class="text-secondary" style="white-space: pre-wrap;">Your message preview will appear here...</div>
       </div>
 

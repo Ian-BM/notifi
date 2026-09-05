@@ -1,0 +1,23 @@
+[Unit]
+Description=Notifi SMS Platform — Gunicorn daemon
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=notifi
+Group=notifi
+RuntimeDirectory=notifi
+WorkingDirectory=/home/notifi/app
+EnvironmentFile=/home/notifi/.env
+ExecStart=/home/notifi/venv/bin/gunicorn \
+    --config /home/notifi/app/deploy/gunicorn.conf.py \
+    core.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

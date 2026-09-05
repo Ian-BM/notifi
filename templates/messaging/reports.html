@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load icons %}
 
 {% block title %}Reports{% endblock %}
 {% block page_title %}Message Reports{% endblock %}
 
 {% block content %}
 <div class="page-hint" id="hint-reports">
-  <span>💡 <strong>Kidokezo:</strong> Hapa unaona ujumbe wote uliotumwa, ni wangapi walipokea, na ni wangapi hawakupokea.</span>
-  <button onclick="dismissHint('hint-reports')" class="hint-dismiss">✕</button>
+  <span class="flex items-center gap-2.5">{% icon 'light-bulb' %} <span><strong>Kidokezo:</strong> Hapa unaona ujumbe wote uliotumwa, ni wangapi walipokea, na ni wangapi hawakupokea.</span></span>
+  <button onclick="dismissHint('hint-reports')" class="hint-dismiss">{% icon 'x-mark' %}</button>
 </div>
 
 {% if message_list %}
@@ -51,7 +52,7 @@
 {% else %}
 <div class="card">
   <div class="empty-state">
-    <div class="empty-icon">✉️</div>
+    <div class="empty-icon">{% icon 'send' 'w-8 h-8' %}</div>
     <div class="empty-title">Bado hujatuma ujumbe wowote</div>
     <div class="empty-desc">Tuma ujumbe wako wa kwanza kwa wazazi au walimu.</div>
     <div class="empty-actions">

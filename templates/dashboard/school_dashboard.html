@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load icons %}
 
 {% block title %}Dashboard{% endblock %}
 {% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2 style="margin-bottom: 0.25rem;">Good day, {{ school.contact_person }} 👋</h2>
+<h2 style="margin-bottom: 0.25rem;">Good day, {{ school.contact_person }}</h2>
 <p class="text-secondary mb-2">Here's what's happening with {{ school.name }} today.</p>
 
 {% if low_balance %}
   <div class="alert alert-warning">
-    ⚠️ Your SMS balance is low ({{ school.sms_balance }} credits left). Contact Notifi to top up.
+    {% icon 'warning' %} Your SMS balance is low ({{ school.sms_balance }} credits left). Contact Notifi to top up.
   </div>
 {% endif %}
 
 {% if just_completed_onboarding %}
   <div class="onboarding-complete-banner" id="onboarding-complete-banner" data-autohide>
-    🎉 <span>You're all set! Your Notifi account is fully set up.</span>
+    {% icon 'sparkles' %} <span>You're all set! Your Notifi account is fully set up.</span>
   </div>
 {% elif show_onboarding %}
   <div class="onboarding-card">
@@ -33,7 +35,7 @@
 
     <div class="onboarding-steps">
       <div class="onboarding-step {% if onboarding.step_contacts_done %}done{% endif %}">
-        <div class="step-check">{% if onboarding.step_contacts_done %}✓{% else %}1{% endif %}</div>
+        <div class="step-check">{% if onboarding.step_contacts_done %}{% icon 'check' 'w-4 h-4' %}{% else %}1{% endif %}</div>
         <div class="step-info">
           <div class="step-name">Ongeza wazazi na walimu</div>
           <div class="step-hint">Ingiza namba za simu kwa mkono au pakia faili la Excel</div>
@@ -46,7 +48,7 @@
       </div>
 
       <div class="onboarding-step {% if onboarding.step_sms_done %}done{% endif %}">
-        <div class="step-check">{% if onboarding.step_sms_done %}✓{% else %}2{% endif %}</div>
+        <div class="step-check">{% if onboarding.step_sms_done %}{% icon 'check' 'w-4 h-4' %}{% else %}2{% endif %}</div>
         <div class="step-info">
           <div class="step-name">Tuma SMS yako ya kwanza</div>
           <div class="step-hint">Jaribu kutuma ujumbe kwa kikundi kimoja</div>
@@ -80,7 +82,7 @@
 </div>
 
 <div class="flex-gap action-buttons mb-2">
-  <a href="{% url 'messaging:send_sms' %}" class="btn btn-primary btn-lg">✉️ Send SMS</a>
+  <a href="{% url 'messaging:send_sms' %}" class="btn btn-primary btn-lg">{% icon 'send' 'w-4 h-4' %} Send SMS</a>
   <a href="{% url 'contacts:contacts_list' %}" class="btn btn-outline btn-lg">View Contacts</a>
 </div>
 
@@ -117,7 +119,7 @@
         {% empty %}
         <tr><td colspan="5">
           <div class="empty-state">
-            <div class="empty-icon">📭</div>
+            <div class="empty-icon">{% icon 'inbox' 'w-8 h-8' %}</div>
             <div class="empty-title">No messages sent yet</div>
             <div class="empty-desc">Send your first SMS to parents or teachers.</div>
             <div class="empty-actions">
@@ -136,28 +138,28 @@
 <div class="modal-overlay active" id="welcome-modal">
   <div class="modal welcome-modal">
     <div class="welcome-modal-header">
-      <div class="welcome-logo">🔔 Notifi</div>
+      <div class="welcome-logo"><img src="{% static 'images/logo_dark.svg' %}" alt="Notifi" height="34"></div>
       <h2>Karibu, {{ school.contact_person }}!</h2>
       <p>Akaunti yako iko tayari. Tutakusaidia kuanza kwa hatua 3 rahisi.</p>
     </div>
 
     <div class="welcome-steps">
       <div class="welcome-step">
-        <div class="welcome-step-icon blue">👥</div>
+        <div class="welcome-step-icon blue">{% icon 'users' %}</div>
         <div>
           <div class="welcome-step-title">Hatua 1: Ongeza Wazazi</div>
           <div class="welcome-step-desc">Ingiza namba za simu za wazazi na walimu</div>
         </div>
       </div>
       <div class="welcome-step">
-        <div class="welcome-step-icon gold">✉️</div>
+        <div class="welcome-step-icon gold">{% icon 'send' %}</div>
         <div>
           <div class="welcome-step-title">Hatua 2: Tuma Ujumbe</div>
           <div class="welcome-step-desc">Chagua kikundi na utume SMS kwa wote</div>
         </div>
       </div>
       <div class="welcome-step">
-        <div class="welcome-step-icon green">📊</div>
+        <div class="welcome-step-icon green">{% icon 'chart-bar' %}</div>
         <div>
           <div class="welcome-step-title">Hatua 3: Angalia Ripoti</div>
           <div class="welcome-step-desc">Ona ujumbe uliofika na ambao haukufika</div>

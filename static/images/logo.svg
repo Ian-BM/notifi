@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 52" width="200" height="52">
+  <text
+    x="0"
+    y="40"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="44"
+    font-weight="700"
+    font-style="italic"
+    fill="#1e293b"
+    letter-spacing="-1"
+  >Notifi</text>
+  <circle cx="165" cy="10" r="5.5" fill="#f59e0b"/>
+  <text
+    x="2"
+    y="52"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="9"
+    fill="#1a56db"
+    letter-spacing="2.5"
+    font-weight="500"
+  >SMS PLATFORM</text>
+</svg>

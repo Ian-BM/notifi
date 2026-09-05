@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load icons %}
 
 {% block title %}Message Sent{% endblock %}
 {% block page_title %}Message Sent{% endblock %}
 
 {% block content %}
 <div class="card" style="max-width: 480px; text-align: center;">
-  <div style="font-size: 48px;">✅</div>
+  <div class="flex justify-center text-success">{% icon 'check-circle-solid' 'w-12 h-12' %}</div>
   <h2 class="mt-1">Message sent successfully!</h2>
   <p class="text-secondary mt-1">Your SMS has been queued for delivery to {{ message_obj.group_name_snapshot }}.</p>
 

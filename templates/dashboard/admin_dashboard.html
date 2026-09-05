@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Admin Dashboard{% endblock %}
 {% block page_title %}Admin Dashboard{% endblock %}
@@ -8,6 +9,11 @@
 {% endblock %}
 
 {% block content %}
+<div class="admin-header">
+  <img src="{% static 'images/logo_dark.svg' %}" alt="Notifi" height="36">
+  <span class="admin-badge">Admin Console</span>
+</div>
+
 <div class="grid grid-4 mb-2">
   <div class="stat-card blue-accent">
     <div class="stat-label">Total Schools</div>

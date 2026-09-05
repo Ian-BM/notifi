@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load icons %}
 
 {% block title %}Schools{% endblock %}
 {% block page_title %}Schools{% endblock %}
@@ -55,7 +56,7 @@
         {% empty %}
         <tr><td colspan="6">
           <div class="empty-state">
-            <div class="empty-icon">🏫</div>
+            <div class="empty-icon">{% icon 'building-library' 'w-8 h-8' %}</div>
             <div class="empty-title">No schools yet</div>
             <div class="empty-desc">Add your first school to get started.</div>
             <div class="empty-actions">

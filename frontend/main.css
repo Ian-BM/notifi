@@ -1,0 +1,855 @@
+@import "tailwindcss";
+@source "../templates";
+@source "../apps";
+
+@theme {
+  --color-navy: #1e293b;
+  --color-navy-light: #27364a;
+  --color-gold: #f59e0b;
+  --color-gold-light: #fef3c7;
+  --color-gold-dark: #d97706;
+  --color-blue: #1a56db;
+  --color-blue-light: #e6f1fb;
+  --color-blue-dark: #1648c0;
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-warning: #d97706;
+  --color-warning-bg: #fef3c7;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-[#f8faff] text-slate-800 font-sans text-sm leading-relaxed antialiased;
+  }
+
+  a {
+    @apply text-blue hover:underline;
+  }
+
+  h1, h2, h3, h4 {
+    @apply m-0 font-semibold text-slate-800;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  * {
+    touch-action: manipulation;
+  }
+}
+
+@layer components {
+  /* ==========================================================================
+     Layout
+     ========================================================================== */
+
+  .app-layout {
+    @apply flex min-h-screen;
+  }
+
+  .sidebar {
+    @apply flex flex-col bg-navy text-white px-3 py-5 sticky top-0 h-screen;
+    width: 224px;
+    min-width: 224px;
+  }
+
+  .sidebar-logo {
+    @apply px-2 pb-6 pt-2;
+  }
+
+  .sidebar-logo-link {
+    @apply block;
+  }
+
+  .sidebar-logo img {
+    @apply block max-w-[160px] transition-opacity duration-150;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  }
+
+  .sidebar-logo img:hover {
+    @apply opacity-85;
+  }
+
+  .sidebar-nav {
+    @apply flex-1 flex flex-col gap-0.5;
+  }
+
+  .sidebar-section-label {
+    @apply text-[11px] uppercase tracking-wider text-slate-400 px-3 pt-4 pb-1.5;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2.5 h-10 px-3 rounded-lg text-slate-300 text-sm font-medium transition-colors duration-150;
+  }
+
+  .nav-item:hover {
+    @apply bg-navy-light text-white no-underline;
+  }
+
+  .nav-item.active {
+    @apply bg-gold text-navy font-semibold shadow-sm;
+  }
+
+  .nav-item .icon {
+    @apply w-[18px] h-[18px] shrink-0;
+  }
+
+  .sidebar-user {
+    @apply mt-auto pt-3.5 px-3 pb-1 border-t border-navy-light flex flex-col gap-0.5;
+  }
+
+  .sidebar-user .user-name {
+    @apply text-white font-semibold text-[13px];
+  }
+
+  .sidebar-user .user-role {
+    @apply text-slate-400 text-xs;
+  }
+
+  .sidebar-user .logout-link {
+    @apply mt-2 text-xs text-red-300 inline-flex items-center gap-1.5 hover:text-red-200;
+  }
+
+  .main-content {
+    @apply flex-1 min-w-0 flex flex-col;
+  }
+
+  .topbar {
+    @apply bg-white/85 border-b border-slate-200 px-8 py-4 flex items-center justify-between gap-4 sticky top-0 z-30 backdrop-blur;
+  }
+
+  .topbar-title {
+    @apply text-xl font-bold text-slate-800;
+  }
+
+  .mobile-topbar-logo {
+    @apply hidden;
+  }
+
+  .admin-header {
+    @apply flex items-center gap-4 mb-6;
+  }
+
+  .admin-badge {
+    @apply bg-gold-light text-gold-dark text-[11px] font-semibold px-2.5 py-1 rounded-full tracking-wide uppercase;
+  }
+
+  .topbar-subtitle {
+    @apply text-[13px] text-slate-500 mt-0.5;
+  }
+
+  .mobile-menu-toggle {
+    @apply hidden bg-transparent border-none cursor-pointer text-slate-800 p-1 -ml-1 rounded-lg hover:bg-slate-100;
+  }
+
+  .mobile-menu-toggle svg {
+    @apply w-6 h-6;
+  }
+
+  .page-body {
+    @apply p-8 flex-1;
+  }
+
+  /* ==========================================================================
+     Grid helpers
+     ========================================================================== */
+
+  .grid { @apply grid gap-5; }
+  .grid-2 { @apply grid-cols-2; }
+  .grid-3 { @apply grid-cols-3; }
+  .grid-4 { @apply grid-cols-4; }
+  .flex { @apply flex; }
+  .flex-between { @apply flex items-center justify-between; }
+  .flex-gap { @apply flex items-center gap-3; }
+  .mt-1 { @apply mt-4; }
+  .mt-2 { @apply mt-6; }
+  .mb-1 { @apply mb-4; }
+  .mb-2 { @apply mb-6; }
+
+  /* ==========================================================================
+     Cards
+     ========================================================================== */
+
+  .card {
+    @apply bg-white border border-slate-200 rounded-xl p-6 shadow-sm;
+  }
+
+  .card-header {
+    @apply text-[15px] font-semibold text-slate-800 mb-4 pb-3 border-b border-slate-200 flex items-center justify-between;
+  }
+
+  /* Stat cards */
+
+  .stat-card {
+    @apply bg-white border border-slate-200 rounded-xl p-5 relative overflow-hidden transition-shadow duration-150;
+  }
+
+  .stat-card:hover {
+    @apply shadow-md;
+  }
+
+  .stat-card.gold-accent { @apply border-t-[3px] border-t-gold; }
+  .stat-card.blue-accent { @apply border-t-[3px] border-t-blue; }
+  .stat-card.green-accent { @apply border-t-[3px] border-t-success; }
+
+  .stat-label {
+    @apply text-xs text-slate-500 uppercase tracking-wide font-semibold;
+  }
+
+  .stat-value {
+    @apply text-[32px] font-bold text-slate-800 leading-none my-2;
+  }
+
+  .stat-sub {
+    @apply text-[12.5px] text-slate-400;
+  }
+
+  /* ==========================================================================
+     Buttons
+     ========================================================================== */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-10 px-[18px] rounded-lg text-sm font-medium border border-transparent cursor-pointer no-underline transition-all duration-150;
+  }
+
+  .btn:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-blue;
+  }
+
+  .btn:active { @apply translate-y-px; }
+  .btn:disabled { @apply opacity-55 cursor-not-allowed; }
+
+  .btn svg { @apply w-[18px] h-[18px]; }
+
+  .btn-primary { @apply bg-blue text-white shadow-sm; }
+  .btn-primary:hover { @apply bg-blue-dark text-white no-underline shadow; }
+
+  .btn-gold { @apply bg-gold text-navy font-semibold shadow-sm; }
+  .btn-gold:hover { @apply bg-gold-dark text-navy no-underline shadow; }
+
+  .btn-outline { @apply border-slate-300 bg-white text-slate-800; }
+  .btn-outline:hover { @apply bg-slate-50 no-underline; }
+
+  .btn-danger { @apply bg-danger text-white; }
+  .btn-danger:hover { @apply bg-red-700 text-white no-underline; }
+
+  .btn-ghost { @apply bg-transparent text-slate-500; }
+  .btn-ghost:hover { @apply bg-slate-50 no-underline; }
+
+  .spinner {
+    @apply inline-block w-3.5 h-3.5 rounded-full border-2 border-white/40;
+    border-top-color: currentColor;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .btn-sm { @apply h-8 px-3 text-[13px]; }
+  .btn-lg { @apply h-12 px-6 text-[15px]; }
+  .btn-block { @apply w-full; }
+
+  /* ==========================================================================
+     Forms
+     ========================================================================== */
+
+  .form-group { @apply mb-[1.1rem]; }
+
+  .form-label {
+    @apply block text-[13px] font-semibold text-slate-500 mb-1.5;
+  }
+
+  .form-input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  select,
+  textarea {
+    @apply w-full h-10 px-3 border border-slate-300 rounded-lg text-sm font-sans text-slate-800 bg-white transition-shadow duration-150;
+  }
+
+  textarea { @apply h-auto py-2.5 px-3 resize-y; }
+
+  .form-input:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none border-blue;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+  }
+
+  .form-hint { @apply text-[12.5px] text-slate-400 mt-1; }
+  .form-error { @apply text-[12.5px] text-danger mt-1; }
+
+  .form-row { @apply flex gap-4; }
+  .form-row > * { @apply flex-1; }
+
+  /* ==========================================================================
+     Tables
+     ========================================================================== */
+
+  .table-wrap {
+    @apply overflow-x-auto rounded-xl border border-slate-200;
+  }
+
+  .data-table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .data-table th {
+    @apply bg-slate-50 text-[11px] uppercase tracking-wide text-slate-500 px-4 py-2.5 border-b border-slate-200 font-semibold text-left whitespace-nowrap;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 border-b border-slate-200 text-slate-800 align-middle;
+  }
+
+  .data-table tr:hover td { @apply bg-slate-50; }
+  .data-table tr:last-child td { @apply border-b-0; }
+
+  .empty-state {
+    @apply text-center py-12 px-4 text-slate-400;
+  }
+
+  .empty-state .icon {
+    @apply mx-auto mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-400;
+  }
+
+  .empty-state .icon svg {
+    @apply w-8 h-8;
+  }
+
+  /* ==========================================================================
+     Badges
+     ========================================================================== */
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-[3px] rounded-full text-xs font-medium whitespace-nowrap;
+  }
+
+  .badge-success { @apply bg-success-bg text-success; }
+  .badge-error { @apply bg-danger-bg text-danger; }
+  .badge-warning { @apply bg-warning-bg text-warning; }
+  .badge-blue { @apply bg-blue-light text-blue; }
+  .badge-gold { @apply bg-gold-light text-gold-dark; }
+  .badge-gray { @apply bg-slate-100 text-slate-500; }
+
+  /* ==========================================================================
+     Character counter
+     ========================================================================== */
+
+  .char-counter { @apply text-[13px] text-right mt-1; }
+  .char-counter.ok { @apply text-slate-400; }
+  .char-counter.warning { @apply text-warning font-medium; }
+  .char-counter.over { @apply text-danger font-semibold; }
+
+  /* ==========================================================================
+     Alerts
+     ========================================================================== */
+
+  .alert {
+    @apply px-4 py-3 rounded-lg border-l-4 flex items-center gap-2.5 mb-4 text-sm;
+  }
+
+  .alert svg { @apply w-5 h-5 shrink-0; }
+
+  .alert-warning { @apply bg-warning-bg border-l-amber-500 text-amber-900; }
+  .alert-error { @apply bg-danger-bg border-l-red-500 text-red-900; }
+  .alert-success { @apply bg-success-bg border-l-emerald-500 text-emerald-900; }
+  .alert-info { @apply bg-blue-light border-l-blue text-blue-900; }
+
+  /* ==========================================================================
+     Toasts
+     ========================================================================== */
+
+  .toast-container {
+    @apply fixed top-5 right-5 z-[1000] flex flex-col gap-2.5;
+  }
+
+  .toast {
+    @apply min-w-[260px] max-w-[340px] bg-white rounded-lg shadow-lg px-4 py-3 text-[13.5px] border-l-4 border-l-blue;
+    animation: toast-in 0.2s ease-out;
+  }
+
+  .toast.success { @apply border-l-success; }
+  .toast.error { @apply border-l-danger; }
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ==========================================================================
+     Modal
+     ========================================================================== */
+
+  .modal-overlay {
+    @apply hidden fixed inset-0 bg-slate-900/50 z-[900] items-center justify-center backdrop-blur-sm;
+  }
+
+  .modal-overlay.active { @apply flex; }
+
+  .modal {
+    @apply bg-white rounded-2xl p-7 shadow-2xl overflow-y-auto;
+    width: 420px;
+    max-width: 92vw;
+    max-height: 90vh;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between mb-5;
+  }
+
+  .modal-close {
+    @apply bg-transparent border-none cursor-pointer text-slate-400 hover:text-slate-600 rounded-lg;
+  }
+
+  .modal-close svg { @apply w-5 h-5; }
+
+  /* ==========================================================================
+     Tabs / pills
+     ========================================================================== */
+
+  .tabs { @apply flex gap-1.5 flex-wrap; }
+
+  .tab-pill {
+    @apply px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-white border border-slate-300 text-slate-500 cursor-pointer transition-colors duration-150;
+  }
+
+  .tab-pill.active {
+    @apply bg-blue border-blue text-white;
+  }
+
+  .template-pill {
+    @apply px-3 py-1.5 rounded-full text-[12.5px] bg-gold-light border border-amber-300 text-gold-dark cursor-pointer font-medium;
+  }
+
+  /* ==========================================================================
+     Progress steps (Send SMS)
+     ========================================================================== */
+
+  .steps { @apply flex items-center mb-6; }
+
+  .step {
+    @apply flex items-center gap-2 text-slate-400 text-[13.5px] font-semibold;
+  }
+
+  .step .step-circle {
+    @apply w-[26px] h-[26px] rounded-full bg-slate-200 text-white flex items-center justify-center text-[12.5px];
+  }
+
+  .step.active { @apply text-slate-800; }
+  .step.active .step-circle { @apply bg-blue; }
+  .step.done .step-circle { @apply bg-success; }
+
+  .step-line {
+    @apply flex-1 h-0.5 bg-slate-200 mx-3;
+  }
+
+  /* ==========================================================================
+     Misc
+     ========================================================================== */
+
+  .text-secondary { @apply text-slate-500; }
+  .text-muted { @apply text-slate-400; }
+  .text-success { @apply text-success; }
+  .text-error { @apply text-danger; }
+  .text-gold { @apply text-gold-dark; }
+  .font-bold { @apply font-bold; }
+
+  .balance-pill {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-light text-blue font-bold text-[13.5px];
+  }
+
+  .upload-zone {
+    @apply border-2 border-dashed border-slate-300 rounded-xl py-10 px-4 text-center text-slate-500 cursor-pointer transition-colors duration-150;
+  }
+
+  .upload-zone.dragover {
+    @apply border-blue bg-blue-light;
+  }
+
+  .progress-bar {
+    @apply w-full h-2 bg-slate-200 rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full bg-blue transition-[width] duration-200;
+  }
+
+  /* ==========================================================================
+     Onboarding — welcome modal
+     ========================================================================== */
+
+  .welcome-modal {
+    @apply text-center p-8;
+    width: 480px;
+    max-width: 92vw;
+  }
+
+  .welcome-modal-header { @apply mb-8; }
+
+  .welcome-modal-header h2 {
+    @apply text-[22px] text-navy my-2;
+  }
+
+  .welcome-modal-header p {
+    @apply text-slate-500 text-sm;
+  }
+
+  .welcome-logo {
+    @apply flex justify-center mb-2;
+  }
+
+  .welcome-logo img {
+    @apply mx-auto;
+  }
+
+  .welcome-steps {
+    @apply flex flex-col gap-4 mb-8 text-left;
+  }
+
+  .welcome-step {
+    @apply flex items-center gap-4 p-3.5 bg-[#f8faff] rounded-lg border border-slate-200;
+  }
+
+  .welcome-step-icon {
+    @apply w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0;
+  }
+
+  .welcome-step-icon svg { @apply w-5 h-5; }
+
+  .welcome-step-icon.blue { @apply bg-blue-light text-blue; }
+  .welcome-step-icon.gold { @apply bg-gold-light text-gold-dark; }
+  .welcome-step-icon.green { @apply bg-success-bg text-success; }
+
+  .welcome-step-title {
+    @apply font-semibold text-sm text-slate-800 mb-0.5;
+  }
+
+  .welcome-step-desc {
+    @apply text-xs text-slate-500;
+  }
+
+  .welcome-support {
+    @apply mt-4 text-xs text-slate-400;
+  }
+
+  /* ==========================================================================
+     Onboarding — progress card
+     ========================================================================== */
+
+  .onboarding-card {
+    @apply bg-white border border-slate-200 rounded-xl p-5 mb-5 border-l-4 border-l-gold;
+  }
+
+  .onboarding-header {
+    @apply flex justify-between items-start mb-3;
+  }
+
+  .onboarding-title { @apply font-semibold text-[15px] text-slate-800; }
+  .onboarding-sub { @apply text-xs text-slate-500 mt-0.5; }
+  .onboarding-pct { @apply text-[22px] font-bold text-gold-dark; }
+
+  .progress-track {
+    @apply h-1.5 bg-slate-200 rounded-full mb-4 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-[width] duration-500 ease-out;
+    background: linear-gradient(90deg, var(--color-gold), var(--color-gold-dark));
+  }
+
+  .onboarding-steps { @apply flex flex-col gap-3; }
+
+  .onboarding-step {
+    @apply flex items-center gap-3.5 p-3.5 bg-[#f8faff] rounded-lg border border-slate-200 transition-colors duration-150;
+  }
+
+  .onboarding-step.done { @apply opacity-70; }
+
+  .step-check {
+    @apply w-7 h-7 rounded-full bg-blue text-white flex items-center justify-center text-xs font-semibold shrink-0;
+  }
+
+  .step-check svg { @apply w-4 h-4; }
+
+  .onboarding-step.done .step-check { @apply bg-success; }
+
+  .step-info { @apply flex-1; }
+  .step-name { @apply font-medium text-sm text-slate-800; }
+  .step-hint { @apply text-xs text-slate-500 mt-0.5; }
+
+  .onboarding-complete-banner {
+    @apply bg-success-bg border border-emerald-300 border-l-4 border-l-success rounded-xl px-5 py-4 mb-5 text-emerald-900 font-semibold flex items-center gap-2.5 transition-opacity duration-300;
+  }
+
+  .onboarding-complete-banner svg { @apply w-5 h-5 shrink-0; }
+
+  @media (max-width: 640px) {
+    .onboarding-step { @apply flex-wrap; }
+    .onboarding-step .btn { @apply w-full mt-2; }
+  }
+
+  /* ==========================================================================
+     Page hints
+     ========================================================================== */
+
+  .page-hint {
+    @apply flex items-center justify-between gap-4 px-4 py-2.5 bg-blue-light border border-blue-200 rounded-lg mb-5 text-[13px] text-navy;
+  }
+
+  .page-hint svg { @apply w-5 h-5 shrink-0; }
+
+  .hint-dismiss {
+    @apply bg-transparent border-none cursor-pointer text-slate-400 px-1.5 py-0.5 rounded shrink-0;
+  }
+
+  .hint-dismiss:hover { @apply bg-black/[0.08]; }
+  .hint-dismiss svg { @apply w-4 h-4; }
+
+  /* ==========================================================================
+     Guided empty states
+     ========================================================================== */
+
+  .empty-icon {
+    @apply mx-auto mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-400;
+  }
+
+  .empty-icon svg { @apply w-8 h-8; }
+
+  .empty-title {
+    @apply text-lg font-semibold text-slate-800 mb-2;
+  }
+
+  .empty-desc {
+    @apply text-sm text-slate-500 mb-6 mx-auto;
+    max-width: 320px;
+  }
+
+  .empty-actions {
+    @apply flex gap-3 justify-center flex-wrap;
+  }
+
+  /* ==========================================================================
+     Touch optimizations (all breakpoints)
+     ========================================================================== */
+
+  .btn, .nav-item, .bottom-nav-item, .badge, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ==========================================================================
+     Bottom navigation (mobile only)
+     ========================================================================== */
+
+  .bottom-nav {
+    @apply hidden fixed bottom-0 left-0 right-0 h-[60px] bg-white border-t border-slate-200 z-[1000];
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .bottom-nav-items {
+    @apply flex h-full items-stretch;
+  }
+
+  .bottom-nav-item {
+    @apply flex-1 flex flex-col items-center justify-center gap-0.5 cursor-pointer text-slate-400 text-[10px] no-underline transition-colors duration-150 font-sans border-none bg-transparent;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+
+  .bottom-nav-item.active { @apply text-gold-dark; }
+  .bottom-nav-item .icon { @apply w-5 h-5; }
+
+  /* Slide-up "More" drawer */
+
+  .mobile-drawer-overlay {
+    @apply hidden fixed inset-0 bg-black/40 z-[998];
+  }
+
+  .mobile-drawer-overlay.open { @apply block; }
+
+  .mobile-drawer {
+    @apply fixed bottom-0 left-0 right-0 bg-white shadow-2xl z-[999];
+    border-radius: 16px 16px 0 0;
+    padding: 0.5rem 0.5rem calc(1rem + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-drawer.open { transform: translateY(0); }
+
+  .mobile-drawer-handle {
+    @apply w-10 h-1 bg-slate-300 rounded-full mx-auto mt-2 mb-3;
+  }
+
+  .mobile-drawer .nav-item {
+    @apply text-slate-800;
+    min-height: 44px;
+  }
+
+  .mobile-drawer .nav-item.active { @apply bg-gold-light text-gold-dark; }
+
+  /* ==========================================================================
+     Table → card rows (mobile)
+     ========================================================================== */
+
+  .table-scroll-hint {
+    @apply hidden text-center text-[11.5px] text-slate-400 mt-1.5;
+  }
+
+  @media (max-width: 640px) {
+    .data-table.stack-on-mobile thead { @apply hidden; }
+
+    .data-table.stack-on-mobile tbody tr {
+      @apply block bg-white border border-slate-200 rounded-lg mb-3 p-3;
+    }
+
+    .data-table.stack-on-mobile tbody td {
+      @apply flex justify-between items-center py-1.5 border-b border-slate-200 text-[13px] text-right;
+    }
+
+    .data-table.stack-on-mobile tbody td:last-child { @apply border-b-0; }
+
+    .data-table.stack-on-mobile tbody td::before {
+      content: attr(data-label);
+      @apply font-semibold text-slate-500 text-[11px] uppercase text-left;
+    }
+
+    .table-scroll-hint { @apply block; }
+  }
+
+  /* ==========================================================================
+     Mobile responsive — general layout
+     ========================================================================== */
+
+  @media (max-width: 1024px) {
+    .grid-3 { @apply grid-cols-2; }
+    .grid-4 { @apply grid-cols-2; }
+  }
+
+  @media (max-width: 768px) {
+    .app-layout { @apply flex-col; }
+
+    .sidebar { @apply hidden; }
+    .bottom-nav { @apply flex; }
+
+    .main-content {
+      margin-left: 0 !important;
+      padding-bottom: 76px;
+    }
+
+    .topbar { @apply p-4; }
+    .topbar-subtitle { @apply hidden; }
+    .page-body { @apply p-4; }
+
+    .mobile-menu-toggle { @apply block; }
+
+    .mobile-topbar-logo { @apply block; }
+    .page-title-text { @apply hidden; }
+
+    .grid-2, .grid-3, .grid-4 { @apply grid-cols-1 gap-3; }
+
+    .stat-card { @apply p-4; }
+    .stat-value { @apply text-[28px]; }
+
+    .action-buttons { @apply flex-col; }
+    .action-buttons .btn { @apply w-full; }
+
+    .form-row { @apply flex-col; }
+    .form-group { width: 100% !important; }
+
+    .form-input,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+      font-size: 16px !important;
+      @apply h-12;
+    }
+
+    textarea { height: auto !important; min-height: 120px; }
+
+    .btn { @apply text-[15px]; min-height: 48px; }
+    .btn-sm { min-height: 40px; }
+
+    .modal-overlay { @apply items-end; }
+
+    .modal {
+      @apply w-full;
+      border-radius: 16px 16px 0 0;
+      max-height: 90vh;
+    }
+
+    .char-counter { @apply text-lg font-semibold sticky bottom-0 bg-white; }
+
+    .preview-card { @apply overflow-hidden cursor-pointer relative; max-height: 60px; }
+    .preview-card.expanded { max-height: none; }
+    .preview-card::after {
+      content: "tap to expand \25be";
+      @apply absolute bottom-1 right-2 text-[10.5px] text-slate-400 bg-[#f8faff] px-1;
+    }
+    .preview-card.expanded::after { content: "tap to collapse \25b4"; }
+
+    .send-sms-btn-mobile { @apply text-base; height: 56px; }
+
+    .hint-dismiss, .modal-close {
+      @apply inline-flex items-center justify-center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .tab-pill { @apply inline-flex items-center; min-height: 44px; }
+  }
+
+  /* ==========================================================================
+     Auth pages
+     ========================================================================== */
+
+  .auth-body {
+    @apply min-h-screen flex items-center justify-center p-6;
+    background: linear-gradient(160deg, #eaf1fd 0%, #f8faff 55%, #fff9ea 100%);
+  }
+
+  .auth-card {
+    @apply w-[400px] max-w-full bg-white rounded-2xl shadow-xl ring-1 ring-slate-900/5 px-8 pt-9 pb-8 relative overflow-hidden;
+  }
+
+  .auth-card::after {
+    content: "";
+    @apply absolute left-0 right-0 bottom-0 h-1;
+    background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-blue) 100%);
+  }
+
+  .auth-logo {
+    @apply flex items-center justify-center mb-1;
+  }
+
+  .auth-logo img { @apply block; }
+
+  .auth-tagline {
+    @apply text-center text-slate-500 text-[13.5px] mb-7;
+  }
+
+  .auth-title {
+    @apply text-[17px] font-semibold mb-5 text-center;
+  }
+
+  .auth-footer {
+    @apply text-center mt-6 text-[12.5px] text-slate-400;
+  }
+}

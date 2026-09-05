@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load icons %}
 
 {% block title %}Import Contacts{% endblock %}
 {% block page_title %}Import Contacts{% endblock %}
@@ -10,7 +11,7 @@
     {% csrf_token %}
 
     <div class="upload-zone" id="csv-drop-zone">
-      <div style="font-size: 32px;">📁</div>
+      <div class="flex justify-center text-slate-400">{% icon 'folder-open' 'w-8 h-8' %}</div>
       <div class="upload-zone-text mt-1">Drag &amp; drop your CSV file here, or click to browse</div>
       <input type="file" name="csv_file" id="csv-file-input" accept=".csv" style="display:none;" required>
     </div>

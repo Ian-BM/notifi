@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load icons %}
 
 {% block title %}Contacts{% endblock %}
 {% block page_title %}Contacts{% endblock %}
@@ -14,8 +15,8 @@
 
 {% block content %}
 <div class="page-hint" id="hint-contacts">
-  <span>💡 <strong>Kidokezo:</strong> Ongeza wazazi kwa mkono mmoja mmoja, au pakia faili la Excel/CSV kwa wote kwa wakati mmoja.</span>
-  <button onclick="dismissHint('hint-contacts')" class="hint-dismiss">✕</button>
+  <span class="flex items-center gap-2.5">{% icon 'light-bulb' %} <span><strong>Kidokezo:</strong> Ongeza wazazi kwa mkono mmoja mmoja, au pakia faili la Excel/CSV kwa wote kwa wakati mmoja.</span></span>
+  <button onclick="dismissHint('hint-contacts')" class="hint-dismiss">{% icon 'x-mark' %}</button>
 </div>
 
 <div class="card mb-2">
@@ -65,12 +66,12 @@
 {% else %}
 <div class="card">
   <div class="empty-state" id="contacts-empty-state">
-    <div class="empty-icon">👥</div>
+    <div class="empty-icon">{% icon 'users' 'w-8 h-8' %}</div>
     <div class="empty-title">Bado huna anwani</div>
     <div class="empty-desc">Ongeza wazazi na walimu ili uweze kutuma ujumbe kwao.</div>
     <div class="empty-actions">
       <button class="btn btn-primary" data-modal-open="add-contact-modal">+ Ongeza Mtu Mmoja</button>
-      <a href="{% url 'contacts:contacts_import' %}" class="btn btn-outline">📂 Pakia Faili la Excel</a>
+      <a href="{% url 'contacts:contacts_import' %}" class="btn btn-outline">{% icon 'folder-open' 'w-4 h-4' %} Pakia Faili la Excel</a>
     </div>
   </div>
   <table id="contacts-table" style="display:none;"><tbody></tbody></table>
@@ -81,7 +82,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>Add Contact</h3>
-      <button class="modal-close" data-modal-close>&times;</button>
+      <button class="modal-close" data-modal-close>{% icon 'x-mark' %}</button>
     </div>
     <form id="add-contact-form" action="{% url 'contacts:contact_add' %}" method="post">
       {% csrf_token %}
