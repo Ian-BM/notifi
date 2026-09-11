@@ -1,3 +1,5 @@
+import secrets
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
@@ -79,8 +81,10 @@ class Command(BaseCommand):
                 "is_superuser": True,
             },
         )
+        admin_password = None
         if created:
-            admin_user.set_password("notifi2026")
+            admin_password = secrets.token_urlsafe(12)
+            admin_user.set_password(admin_password)
             admin_user.save()
             self.stdout.write(self.style.SUCCESS("Created admin user."))
         else:
@@ -146,5 +150,8 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("\nSeeding complete!"))
         self.stdout.write("Login credentials:")
-        self.stdout.write("  Admin:        admin / notifi2026")
+        if admin_password:
+            self.stdout.write(f"  Admin:        admin / {admin_password}")
+        else:
+            self.stdout.write("  Admin:        admin (already existed — password unchanged)")
         self.stdout.write("  School demo:  stagnes / demo2026")

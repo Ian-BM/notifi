@@ -52,6 +52,9 @@
           <a href="{% url 'schools:transactions_list' %}" class="nav-item {% if app == 'schools' and url_name == 'transactions_list' %}active{% endif %}">
             <span class="icon">{% icon 'credit-card' 'w-full h-full' %}</span> Transactions
           </a>
+          <a href="{% url 'schools:beem_test' %}" class="nav-item {% if app == 'schools' and url_name == 'beem_test' %}active{% endif %}">
+            <span class="icon">{% icon 'chat' 'w-full h-full' %}</span> Beem API Test
+          </a>
         {% endif %}
         {% endwith %}
       </nav>

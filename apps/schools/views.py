@@ -1,11 +1,16 @@
+import json
 import secrets
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from apps.accounts.decorators import admin_required
+from apps.messaging.beem import get_beem_balance, send_bulk_sms
 from apps.messaging.models import Transaction
 
 from .forms import SchoolForm, SchoolUserForm
@@ -120,3 +125,82 @@ def transactions_list(request):
     return render(request, 'admin_panel/transactions.html', {
         'transactions': transactions,
     })
+
+
+def _normalize_tz_phone(raw):
+    phone = raw.replace('+', '').replace(' ', '').replace('-', '')
+    if phone.startswith('0'):
+        phone = '255' + phone[1:]
+    elif not phone.startswith('255'):
+        phone = '255' + phone
+    return phone
+
+
+@admin_required
+def beem_test_panel(request):
+    """Admin-only sandbox for exercising the Beem API directly."""
+    balance_data = get_beem_balance()
+    api_key = settings.BEEM_API_KEY
+
+    return render(request, 'admin_panel/beem_test.html', {
+        'beem_balance': balance_data,
+        'api_key_preview': f'{api_key[:8]}...' if api_key else 'NOT SET',
+        'sender_id': 'INFO',
+    })
+
+
+@admin_required
+@require_POST
+def beem_test_send(request):
+    """Send a one-off test SMS via Beem. JSON in, JSON out."""
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON in request body'})
+
+    phone = data.get('phone', '').strip()
+    message = data.get('message', '').strip()
+    sender_id = (data.get('sender_id') or 'INFO').strip() or 'INFO'
+
+    if not phone:
+        return JsonResponse({'success': False, 'error': 'Phone number is required'})
+    if not message:
+        return JsonResponse({'success': False, 'error': 'Message is required'})
+    if len(message) > 160:
+        return JsonResponse({
+            'success': False,
+            'error': f'Message too long: {len(message)} characters. Max 160.',
+        })
+
+    phone = _normalize_tz_phone(phone)
+    if len(phone) != 12 or not phone.isdigit():
+        return JsonResponse({
+            'success': False,
+            'error': f'Invalid phone number: {phone}. Must be 12 digits starting with 255.',
+        })
+
+    result = send_bulk_sms(
+        source_addr=sender_id,
+        message=message,
+        recipients=[{'recipient_id': '1', 'dest_addr': phone}],
+    )
+
+    return JsonResponse({
+        'success': result.get('success', False),
+        'phone_used': phone,
+        'sender_used': sender_id,
+        'message_sent': message,
+        'beem_response': result.get('data', {}),
+        'error': result.get('error'),
+        'status_code': result.get('status_code'),
+    })
+
+
+@admin_required
+def beem_test_balance(request):
+    """Check the live Beem SMS credit balance. JSON out."""
+    try:
+        result = get_beem_balance()
+        return JsonResponse({'success': 'error' not in result, 'data': result})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

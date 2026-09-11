@@ -5,6 +5,7 @@
 {% block page_title %}Admin Dashboard{% endblock %}
 
 {% block topbar_actions %}
+<a href="{% url 'schools:beem_test' %}" class="btn btn-outline">Beem API Test</a>
 <a href="{% url 'schools:school_add' %}" class="btn btn-gold">+ Add School</a>
 {% endblock %}
 

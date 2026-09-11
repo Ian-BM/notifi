@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block title %}Beem API Test{% endblock %}
+{% block page_title %}Beem API Test{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'schools:admin_index' %}" class="btn btn-outline btn-sm">← Back to Admin</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="beem-status-grid">
+  <div class="card beem-status-card">
+    <div class="beem-status-icon" id="status-icon">?</div>
+    <div class="beem-status-label">API Connection</div>
+    <div class="beem-status-value" id="api-status">Checking...</div>
+  </div>
+
+  <div class="card beem-status-card">
+    <div class="beem-status-icon blue">🔑</div>
+    <div class="beem-status-label">API Key</div>
+    <div class="beem-status-value" style="font-size:13px;font-family:monospace">
+      {{ api_key_preview }}
+    </div>
+  </div>
+
+  <div class="card beem-status-card">
+    <div class="beem-status-icon gold">💬</div>
+    <div class="beem-status-label">SMS Balance</div>
+    <div class="beem-status-value" id="sms-balance">Loading...</div>
+  </div>
+
+  <div class="card beem-status-card">
+    <div class="beem-status-icon navy">📤</div>
+    <div class="beem-status-label">Default Sender</div>
+    <div class="beem-status-value">{{ sender_id }}</div>
+  </div>
+</div>
+
+<div class="card mb-2">
+  <div class="card-header">Send Test SMS</div>
+
+  <div class="alert alert-warning">
+    This sends a real SMS using Beem credits. Each test uses at least 1 credit — use your own phone number.
+  </div>
+
+  <div class="field">
+    <label>Recipient Phone Number</label>
+    <div class="phone-input-wrap">
+      <span class="phone-prefix">+255</span>
+      <input type="text" id="test-phone" placeholder="712 345 678" maxlength="15">
+    </div>
+    <div class="form-hint">Enter a Tanzanian number — use your own to verify receipt.</div>
+  </div>
+
+  <div class="field">
+    <label>Sender ID</label>
+    <input type="text" id="test-sender" value="{{ sender_id }}" maxlength="11"
+           style="font-family:monospace;text-transform:uppercase"
+           oninput="this.value=this.value.toUpperCase()">
+    <div class="form-hint">Use "INFO" while no Sender ID is approved yet.</div>
+  </div>
+
+  <div class="field">
+    <label>Test Message</label>
+    <textarea id="test-message" rows="4" maxlength="160" oninput="updateCharCount()">Habari! Hii ni ujumbe wa majaribio kutoka Notifi SMS Platform. API inafanya kazi vizuri. - Notifi Team</textarea>
+    <div class="char-counter ok" id="char-counter">
+      <span id="char-count">0</span>/160 characters — <span id="sms-count">1 SMS</span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-lg btn-block" id="send-btn" onclick="sendTestSMS()">
+    Send Test SMS
+  </button>
+
+  <div id="result-panel" style="display:none;margin-top:1.5rem">
+    <div class="result-header" id="result-header"></div>
+    <div class="result-body" id="result-body"></div>
+  </div>
+</div>
+
+<div class="card mb-2">
+  <div class="card-header">
+    API Response Log
+    <button class="btn btn-outline btn-sm" onclick="clearLog()">Clear</button>
+  </div>
+  <div id="api-log" class="api-log">
+    <div class="log-empty">No API calls yet. Send a test SMS above.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Common Error Codes</div>
+  <div class="table-wrap">
+    <table class="data-table stack-on-mobile">
+      <thead>
+        <tr><th>Code</th><th>Meaning</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Code"><span class="badge badge-success">100</span></td>
+          <td data-label="Meaning">Success — SMS sent</td>
+          <td data-label="Fix">Check your phone</td>
+        </tr>
+        <tr>
+          <td data-label="Code"><span class="badge badge-error">401</span></td>
+          <td data-label="Meaning">Unauthorized — wrong API keys</td>
+          <td data-label="Fix">Check BEEM_API_KEY / BEEM_SECRET_KEY in .env</td>
+        </tr>
+        <tr>
+          <td data-label="Code"><span class="badge badge-error">112</span></td>
+          <td data-label="Meaning">Invalid sender address</td>
+          <td data-label="Fix">Sender ID not registered — use INFO instead</td>
+        </tr>
+        <tr>
+          <td data-label="Code"><span class="badge badge-warning">200</span></td>
+          <td data-label="Meaning">Insufficient balance</td>
+          <td data-label="Fix">Buy more SMS credits on the Beem dashboard</td>
+        </tr>
+        <tr>
+          <td data-label="Code"><span class="badge badge-error">400</span></td>
+          <td data-label="Meaning">Bad request — invalid data</td>
+          <td data-label="Fix">Check phone format: 255712345678</td>
+        </tr>
+        <tr>
+          <td data-label="Code"><span class="badge badge-warning">111</span></td>
+          <td data-label="Meaning">Invalid destination address</td>
+          <td data-label="Fix">Phone number format wrong — must start with 255</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateCharCount() {
+  const msg = document.getElementById('test-message').value;
+  const len = msg.length;
+  const counter = document.getElementById('char-counter');
+  document.getElementById('char-count').textContent = len;
+
+  counter.className = len <= 140 ? 'char-counter ok' : len <= 160 ? 'char-counter warning' : 'char-counter over';
+
+  const smsCount = len <= 160 ? 1 : len <= 306 ? 2 : 3;
+  document.getElementById('sms-count').textContent = smsCount + ' SMS credit' + (smsCount > 1 ? 's' : '');
+}
+
+async function checkBalance() {
+  const balanceEl = document.getElementById('sms-balance');
+  const statusEl = document.getElementById('api-status');
+  const statusIcon = document.getElementById('status-icon');
+
+  try {
+    const res = await fetch('{% url "schools:beem_test_balance" %}');
+    const data = await res.json();
+
+    if (data.success) {
+      const balance = data.data?.data?.credit_balance ?? data.data?.credit_balance ?? data.data?.balance ?? JSON.stringify(data.data);
+      balanceEl.textContent = balance + ' credits';
+      statusEl.textContent = 'Connected';
+      statusIcon.textContent = '✓';
+      statusIcon.className = 'beem-status-icon green';
+      addLog('info', 'Balance check successful');
+      addLog('data', JSON.stringify(data.data, null, 2));
+    } else {
+      balanceEl.textContent = 'Error';
+      statusEl.textContent = 'Connection failed';
+      statusIcon.textContent = '✗';
+      statusIcon.className = 'beem-status-icon';
+      addLog('error', 'Balance check failed: ' + (data.error || JSON.stringify(data.data)));
+    }
+  } catch (e) {
+    addLog('error', 'Balance check exception: ' + e.message);
+    statusEl.textContent = 'Error';
+    balanceEl.textContent = 'Error';
+  }
+}
+
+async function sendTestSMS() {
+  const btn = document.getElementById('send-btn');
+  const phone = document.getElementById('test-phone').value.trim();
+  const message = document.getElementById('test-message').value.trim();
+  const sender = document.getElementById('test-sender').value.trim() || 'INFO';
+
+  if (!phone) { showResult(false, 'Phone number is required', {}); return; }
+  if (!message) { showResult(false, 'Message is required', {}); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+
+  addLog('info', `Sending SMS to: +255${phone} via sender: ${sender}`);
+  addLog('data', `Message: "${message}"`);
+
+  try {
+    const res = await fetch('{% url "schools:beem_test_send" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ phone, message, sender_id: sender }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      showResult(true, 'SMS sent successfully — check your phone.', data);
+      addLog('success', 'SMS sent successfully');
+      addLog('data', JSON.stringify(data.beem_response, null, 2));
+      setTimeout(checkBalance, 2000);
+    } else {
+      showResult(false, 'Send failed — see details below', data);
+      addLog('error', 'Send failed: ' + (data.error || JSON.stringify(data.beem_response)));
+    }
+  } catch (e) {
+    showResult(false, 'Network error: ' + e.message, {});
+    addLog('error', 'Network exception: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Send Test SMS';
+  }
+}
+
+function showResult(success, message, data) {
+  const panel = document.getElementById('result-panel');
+  const header = document.getElementById('result-header');
+  const body = document.getElementById('result-body');
+
+  panel.style.display = 'block';
+  header.textContent = message;
+  header.className = 'result-header ' + (success ? 'success' : 'error');
+
+  let rows = '';
+  if (data.phone_used) rows += resultRow('Phone used', '+' + data.phone_used);
+  if (data.sender_used) rows += resultRow('Sender ID used', data.sender_used);
+  if (data.message_sent) rows += resultRow('Message', data.message_sent);
+  if (data.status_code) rows += resultRow('HTTP Status', data.status_code, data.status_code === 200 ? 'good' : 'bad');
+  if (data.beem_response) {
+    const code = data.beem_response.code ?? data.beem_response.successful;
+    if (code !== undefined) rows += resultRow('Beem Code', JSON.stringify(code), success ? 'good' : 'bad');
+    if (data.beem_response.request_id) rows += resultRow('Request ID', data.beem_response.request_id);
+  }
+  if (data.error) rows += resultRow('Error', data.error, 'bad');
+
+  body.innerHTML = rows || ('<div class="result-row"><span class="result-key">Raw response</span><span class="result-val">' + JSON.stringify(data) + '</span></div>');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resultRow(key, val, cls) {
+  return `<div class="result-row"><span class="result-key">${escapeHtml(String(key))}</span><span class="result-val ${cls || ''}">${escapeHtml(String(val))}</span></div>`;
+}
+
+function addLog(type, message) {
+  const log = document.getElementById('api-log');
+  const empty = log.querySelector('.log-empty');
+  if (empty) empty.remove();
+
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  const typeClass = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : type === 'data' ? 'log-data' : 'log-info';
+  entry.innerHTML = `<div class="log-time">${new Date().toLocaleTimeString()}</div><div class="${typeClass}">${type.toUpperCase()}: ${escapeHtml(message)}</div>`;
+  log.appendChild(entry);
+  log.scrollTop = log.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function clearLog() {
+  document.getElementById('api-log').innerHTML = '<div class="log-empty">Log cleared.</div>';
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    for (const cookie of document.cookie.split(';')) {
+      const c = cookie.trim();
+      if (c.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(c.slice(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateCharCount();
+  checkBalance();
+});
+</script>
+{% endblock %}

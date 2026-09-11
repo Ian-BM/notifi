@@ -852,4 +852,81 @@
   .auth-footer {
     @apply text-center mt-6 text-[12.5px] text-slate-400;
   }
+
+  /* ==========================================================================
+     Beem API test panel
+     ========================================================================== */
+
+  .beem-status-grid { @apply grid grid-cols-4 gap-4 mb-5; }
+
+  .beem-status-card { @apply text-center p-5; }
+
+  .beem-status-icon {
+    @apply w-11 h-11 rounded-full flex items-center justify-center mx-auto mb-2 text-lg font-semibold;
+  }
+
+  .beem-status-icon.green { @apply bg-success-bg text-success; }
+  .beem-status-icon.blue { @apply bg-blue-light text-blue; }
+  .beem-status-icon.gold { @apply bg-gold-light text-gold-dark; }
+  .beem-status-icon.navy { @apply bg-slate-100 text-navy; }
+
+  .beem-status-label {
+    @apply text-[11px] uppercase tracking-wide text-slate-400 font-semibold mb-1;
+  }
+
+  .beem-status-value { @apply text-[17px] font-bold text-slate-800; }
+
+  .phone-input-wrap { @apply relative; }
+
+  .phone-prefix {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-slate-400 font-medium pointer-events-none;
+  }
+
+  .phone-input-wrap input { @apply pl-[52px]; }
+
+  .field { @apply mb-[1.1rem]; }
+  .field label { @apply block text-[13px] font-semibold text-slate-500 mb-1.5; }
+
+  .api-log {
+    @apply bg-navy rounded-xl p-4 min-h-[120px] max-h-[300px] overflow-y-auto text-[12px];
+    font-family: 'Courier New', monospace;
+  }
+
+  .log-empty { @apply text-slate-500 text-center py-8; }
+
+  .log-entry { @apply mb-3 pb-3 border-b border-navy-light; }
+  .log-entry:last-child { @apply border-b-0 mb-0 pb-0; }
+
+  .log-time { @apply text-slate-500 text-[11px] mb-1; }
+  .log-success { @apply text-emerald-400; }
+  .log-error { @apply text-red-400; }
+  .log-info { @apply text-blue-300; }
+  .log-data { @apply text-slate-200 whitespace-pre-wrap break-all; }
+
+  .result-header {
+    @apply px-4 py-3 rounded-lg font-semibold text-[15px] mb-3;
+  }
+
+  .result-header.success { @apply bg-success-bg text-success border border-emerald-300; }
+  .result-header.error { @apply bg-danger-bg text-danger border border-red-300; }
+
+  .result-body { @apply bg-[#f8faff] border border-slate-200 rounded-lg p-4; }
+
+  .result-row {
+    @apply flex justify-between items-start py-1.5 border-b border-slate-200 text-[13px] gap-4;
+  }
+
+  .result-row:last-child { @apply border-b-0; }
+  .result-key { @apply text-slate-500 shrink-0; }
+  .result-val { @apply font-mono text-slate-800 text-right break-all; }
+  .result-val.good { @apply text-success font-semibold; }
+  .result-val.bad { @apply text-danger font-semibold; }
+
+  @media (max-width: 768px) {
+    .beem-status-grid { @apply grid-cols-2; }
+  }
+
+  @media (max-width: 480px) {
+    .beem-status-grid { @apply grid-cols-1; }
+  }
 }
