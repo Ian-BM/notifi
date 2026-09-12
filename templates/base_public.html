@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="CbNUT3w8uiAqWxCW1BwBb6zoM58w5FPShFO69D7_RhY">
+
+  <!-- Primary SEO -->
+  <meta name="description" content="{% block meta_description %}Notifi helps schools in Tanzania send instant SMS to parents and staff. Fee reminders, meeting notices, emergency alerts. Works on Vodacom, Airtel, Tigo and Halotel.{% endblock %}">
+  <meta name="keywords" content="bulk SMS Tanzania, school SMS platform, SMS kwa shule, wazazi SMS, Notifi Tanzania, school communication Tanzania">
+  <meta name="author" content="Notifi">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph — for WhatsApp and Facebook link previews -->
+  <meta property="og:title" content="{% block og_title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}">
+  <meta property="og:description" content="Send instant SMS to every parent in seconds. Built for schools in East Africa.">
+  <meta property="og:url" content="{% block og_url %}https://notifi.co.tz/{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Notifi">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Notifi — SMS Platform for Schools">
+  <meta name="twitter:description" content="Send instant SMS to every parent in seconds. Built for schools in East Africa.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{% block canonical_url %}https://notifi.co.tz/{% endblock %}">
+
+  <title>{% block title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/logo_icon.svg' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo_icon.svg' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="public-body">
+  <header class="public-header">
+    <a href="{% url 'landing' %}" class="public-logo-link">
+      <img src="{% static 'images/logo_dark.svg' %}" alt="Notifi" height="32">
+    </a>
+    <nav class="public-nav">
+      <a href="{% url 'pricing' %}">Pricing</a>
+      <a href="{% url 'login' %}" class="btn btn-gold btn-sm">Sign in</a>
+    </nav>
+  </header>
+
+  <main class="public-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="public-footer">
+    &copy; {% now "Y" %} Notifi. Built for schools in Tanzania.
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

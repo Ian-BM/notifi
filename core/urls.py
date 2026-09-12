@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import TemplateView
 
 from apps.messaging.views import sms_callback
+from core.views import landing_page, pricing_page
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='/dashboard/', permanent=False)),
+    path('', landing_page, name='landing'),
+    path('pricing/', pricing_page, name='pricing'),
     path('', include('apps.accounts.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('contacts/', include('apps.contacts.urls')),

@@ -1,0 +1,18 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}
+
+{% block content %}
+<div class="public-hero">
+  <h1>Connect with every parent, instantly.</h1>
+  <p>
+    Notifi helps schools across Tanzania send fee reminders, meeting notices,
+    exam results and emergency alerts by SMS — delivered to every parent's
+    phone on Vodacom, Airtel, Tigo or Halotel, no app required.
+  </p>
+  <div class="public-hero-actions">
+    <a href="{% url 'login' %}" class="btn btn-gold btn-lg">Sign in to your school</a>
+    <a href="{% url 'pricing' %}" class="btn btn-outline btn-lg">See pricing</a>
+  </div>
+</div>
+{% endblock %}

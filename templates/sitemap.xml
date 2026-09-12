@@ -6,4 +6,10 @@
     <priority>1.0</priority>
     <lastmod>2026-09-12</lastmod>
   </url>
+  <url>
+    <loc>https://notifi.co.tz/pricing/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-09-12</lastmod>
+  </url>
 </urlset>

@@ -1,13 +1,21 @@
 User-agent: *
-Allow: /
+
+# Allow public pages
+Allow: /$
+Allow: /pricing/
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /static/
+
+# Block private app pages
 Disallow: /dashboard/
 Disallow: /admin-panel/
 Disallow: /send-sms/
 Disallow: /contacts/
 Disallow: /reports/
 Disallow: /templates/
-Disallow: /login/
-Disallow: /logout/
 Disallow: /api/
+Disallow: /logout/
+Disallow: /login/
 
 Sitemap: https://notifi.co.tz/sitemap.xml
