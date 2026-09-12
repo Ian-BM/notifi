@@ -2,63 +2,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <!-- Google Search Console Verification -->
-  <meta name="google-site-verification" content="CbNUT3w8uiAqWxCW1BwBb6zoM58w5FPShFO69D7_RhY">
+  <!-- Google Search Console -->
+  <meta name="google-site-verification" content="CbNUT3w8uiAqWxCW1BwBb6zoM58w5FPShFO69D7_RhY"/>
 
-  <!-- Primary SEO -->
-  <meta name="description" content="{% block meta_description %}Notifi helps schools in Tanzania send instant SMS to parents and staff. Fee reminders, meeting notices, emergency alerts. Works on Vodacom, Airtel, Tigo and Halotel.{% endblock %}">
-  <meta name="keywords" content="bulk SMS Tanzania, school SMS platform, SMS kwa shule, wazazi SMS, Notifi Tanzania, school communication Tanzania">
-  <meta name="author" content="Notifi">
-  <meta name="robots" content="index, follow">
-
-  <!-- Open Graph — for WhatsApp and Facebook link previews -->
-  <meta property="og:title" content="{% block og_title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}">
-  <meta property="og:description" content="Send instant SMS to every parent in seconds. Built for schools in East Africa.">
-  <meta property="og:url" content="{% block og_url %}https://notifi.co.tz/{% endblock %}">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Notifi">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Notifi — SMS Platform for Schools">
-  <meta name="twitter:description" content="Send instant SMS to every parent in seconds. Built for schools in East Africa.">
-
-  <!-- Canonical -->
-  <link rel="canonical" href="{% block canonical_url %}https://notifi.co.tz/{% endblock %}">
-
+  <!-- SEO -->
   <title>{% block title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}</title>
+  <meta name="description" content="{% block description %}Notifi helps schools in Tanzania send instant SMS to parents and staff. Fee reminders, meeting notices, emergency alerts. Works on Vodacom, Airtel, Tigo and Halotel.{% endblock %}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{% block canonical %}https://notifi.co.tz/{% endblock %}"/>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% block og_title %}Notifi — Bulk SMS Platform for Schools{% endblock %}"/>
+  <meta property="og:description" content="Send instant SMS to every parent in seconds. Built for schools in East Africa."/>
+  <meta property="og:url" content="https://notifi.co.tz"/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/logo_icon.svg' %}">
-  <link rel="apple-touch-icon" href="{% static 'images/logo_icon.svg' %}">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/public.css' %}"/>
   {% block extra_css %}{% endblock %}
 </head>
-<body class="public-body">
-  <header class="public-header">
-    <a href="{% url 'landing' %}" class="public-logo-link">
-      <img src="{% static 'images/logo_dark.svg' %}" alt="Notifi" height="32">
-    </a>
-    <nav class="public-nav">
-      <a href="{% url 'pricing' %}">Pricing</a>
-      <a href="{% url 'login' %}" class="btn btn-gold btn-sm">Sign in</a>
-    </nav>
-  </header>
+<body>
 
-  <main class="public-main">
-    {% block content %}{% endblock %}
-  </main>
+<!-- Navigation -->
+<nav class="pub-nav">
+  <a href="{% url 'landing' %}" class="pub-logo">
+    Notifi<span class="pub-logo-dot"></span>
+  </a>
+  <div class="pub-nav-links">
+    <a href="{% url 'landing' %}#features" class="pub-nav-link">Features</a>
+    <a href="{% url 'landing' %}#how-it-works" class="pub-nav-link">How it works</a>
+    <a href="{% url 'pricing' %}" class="pub-nav-link {% if request.resolver_match.url_name == 'pricing' %}active{% endif %}">Pricing</a>
+    <a href="{% url 'landing' %}#contact" class="pub-nav-link">Contact</a>
+    <a href="{% url 'login' %}" class="pub-btn-nav">Sign in</a>
+  </div>
+  <!-- Mobile hamburger -->
+  <button class="pub-hamburger" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
+</nav>
 
-  <footer class="public-footer">
-    &copy; {% now "Y" %} Notifi. Built for schools in Tanzania.
-  </footer>
+<!-- Mobile nav drawer -->
+<div class="pub-mobile-nav" id="mobile-nav">
+  <a href="{% url 'landing' %}" class="pub-mobile-link">Home</a>
+  <a href="{% url 'landing' %}#features" class="pub-mobile-link">Features</a>
+  <a href="{% url 'landing' %}#how-it-works" class="pub-mobile-link">How it works</a>
+  <a href="{% url 'pricing' %}" class="pub-mobile-link">Pricing</a>
+  <a href="{% url 'login' %}" class="pub-mobile-link" style="color:#1a56db;font-weight:600">Sign in</a>
+</div>
+<div class="pub-overlay" id="nav-overlay" onclick="toggleMobileNav()"></div>
 
-  <script src="{% static 'js/main.js' %}"></script>
-  {% block extra_js %}{% endblock %}
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="pub-footer">
+  <div class="pub-footer-inner">
+    <div class="pub-footer-logo">
+      Notifi<span class="pub-logo-dot" style="width:7px;height:7px;top:-1px;right:-4px"></span>
+    </div>
+    <div class="pub-footer-links">
+      <a href="{% url 'landing' %}#features" class="pub-footer-link">Features</a>
+      <a href="{% url 'pricing' %}" class="pub-footer-link">Pricing</a>
+      <a href="{% url 'landing' %}#how-it-works" class="pub-footer-link">How it works</a>
+      <a href="{% url 'login' %}" class="pub-footer-link">Sign in</a>
+    </div>
+    <div class="pub-footer-copy">{% now "Y" %} Notifi · Built in Dar es Salaam, Tanzania · notifi.co.tz</div>
+  </div>
+</footer>
+
+<script src="{% static 'js/public.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,18 +1,148 @@
 {% extends 'base_public.html' %}
+{% load static %}
 
 {% block title %}Notifi — Bulk SMS Platform for Schools in Tanzania{% endblock %}
+{% block description %}Notifi helps schools in Tanzania send instant SMS to parents and staff. Fee reminders, meeting notices, emergency alerts. Works on Vodacom, Airtel, Tigo and Halotel.{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero { padding: 5rem 2rem 3rem; text-align: center; max-width: 860px; margin: 0 auto; }
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #854f0b; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; border: 0.5px solid #fcd34d; }
+.hero-badge span { width: 6px; height: 6px; background: #f59e0b; border-radius: 50%; display: inline-block; }
+.hero h1 { font-size: 52px; font-weight: 700; color: #1e293b; line-height: 1.1; margin-bottom: 1.25rem; letter-spacing: -1px; }
+.hero h1 em { font-style: italic; color: #1a56db; }
+.hero p { font-size: 18px; color: #64748b; line-height: 1.7; max-width: 580px; margin: 0 auto 2rem; }
+.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.hero-sub { font-size: 12px; color: #94a3b8; margin-top: 1rem; }
+.sms-preview { max-width: 340px; margin: 3rem auto 0; background: #fff; border: 0.5px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; text-align: left; box-shadow: 0 2px 12px rgba(26,86,219,0.07); }
+.sms-from { font-size: 11px; color: #94a3b8; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.sms-bubble { background: #1a56db; color: #fff; border-radius: 12px 12px 12px 2px; padding: 10px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 6px; }
+.sms-time { font-size: 11px; color: #94a3b8; }
+.stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; border-top: 0.5px solid #e2e8f0; border-bottom: 0.5px solid #e2e8f0; }
+.stat-item { padding: 2rem; text-align: center; border-right: 0.5px solid #e2e8f0; }
+.stat-item:last-child { border-right: none; }
+.stat-num { font-size: 36px; font-weight: 700; color: #1a56db; letter-spacing: -1px; }
+.stat-label { font-size: 13px; color: #64748b; margin-top: 4px; }
+.features-section { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.feature-card { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
+.feature-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 20px; }
+.feature-icon.blue { background: #e6f1fb; }
+.feature-icon.gold { background: #fef3c7; }
+.feature-icon.green { background: #ecfdf5; }
+.feature-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 6px; }
+.feature-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+.how-section { background: #fff; border-top: 0.5px solid #e2e8f0; border-bottom: 0.5px solid #e2e8f0; padding: 4rem 2rem; }
+.how-inner { max-width: 960px; margin: 0 auto; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem; position: relative; }
+.steps::before { content: ''; position: absolute; top: 24px; left: 16%; right: 16%; height: 0.5px; background: #e2e8f0; }
+.step { text-align: center; }
+.step-num { width: 48px; height: 48px; border-radius: 50%; background: #1a56db; color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; position: relative; z-index: 1; }
+.step-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 6px; }
+.step-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+.usecases-section { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
+.usecases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.usecase-card { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; border-top: 3px solid #f59e0b; }
+.usecase-icon { font-size: 22px; margin-bottom: 0.75rem; }
+.usecase-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 8px; }
+.usecase-desc { font-size: 13px; color: #64748b; line-height: 1.7; }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 34px; }
+  .hero p { font-size: 15px; }
+  .stats-bar { grid-template-columns: 1fr; }
+  .stat-item { border-right: none; border-bottom: 0.5px solid #e2e8f0; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .steps::before { display: none; }
+  .usecases { grid-template-columns: 1fr; }
+  .hero-cta { flex-direction: column; align-items: center; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="public-hero">
-  <h1>Connect with every parent, instantly.</h1>
-  <p>
-    Notifi helps schools across Tanzania send fee reminders, meeting notices,
-    exam results and emergency alerts by SMS — delivered to every parent's
-    phone on Vodacom, Airtel, Tigo or Halotel, no app required.
-  </p>
-  <div class="public-hero-actions">
-    <a href="{% url 'login' %}" class="btn btn-gold btn-lg">Sign in to your school</a>
-    <a href="{% url 'pricing' %}" class="btn btn-outline btn-lg">See pricing</a>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge"><span></span>Built for schools in East Africa</div>
+  <h1>Send SMS to every parent<br>in <em>seconds.</em></h1>
+  <p>Notifi helps schools send instant SMS to parents and staff. Fee reminders, meeting notices, emergency alerts, and more. No technical skills needed.</p>
+  <div class="hero-cta">
+    <a href="https://wa.me/255754938633?text=Habari%2C%20nataka%20kujua%20zaidi%20kuhusu%20Notifi%20SMS%20platform" class="btn-primary" target="_blank">Get started today</a>
+    <a href="#how-it-works" class="btn-outline-blue">See how it works</a>
   </div>
+  <div class="hero-sub">Works on Vodacom · Airtel · Tigo · Halotel · No app needed for parents</div>
+  <div class="sms-preview">
+    <div class="sms-from">SHULE YA IMANI · Just now</div>
+    <div class="sms-bubble">Mzazi mpendwa, ada ya muhula wa 2 ni TSh 150,000. Tafadhali lipa kabla ya tarehe 30/09. Asante, Shule ya Imani</div>
+    <div class="sms-time">Delivered to 412 parents · 9:14 AM</div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">30s</div><div class="stat-label">Time to reach all parents</div></div>
+  <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">SMS delivery rate</div></div>
+  <div class="stat-item"><div class="stat-num">TSh 50</div><div class="stat-label">Per SMS — pay as you go</div></div>
 </div>
+
+<!-- Features -->
+<section class="features-section" id="features">
+  <div class="section-label">Features</div>
+  <div class="section-title">Everything a school needs</div>
+  <div class="section-sub">Simple tools built specifically for school administrators. No training required.</div>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon blue">💬</div><div class="feature-title">Bulk SMS</div><div class="feature-desc">Send one message to all parents, one class, or just teachers. Done in seconds.</div></div>
+    <div class="feature-card"><div class="feature-icon gold">📋</div><div class="feature-title">Message templates</div><div class="feature-desc">Ready made Swahili templates for fee reminders, meetings, results, and emergencies.</div></div>
+    <div class="feature-card"><div class="feature-icon green">📊</div><div class="feature-title">Delivery reports</div><div class="feature-desc">See exactly which parents received your message and which ones did not.</div></div>
+    <div class="feature-card"><div class="feature-icon gold">👥</div><div class="feature-title">Contact groups</div><div class="feature-desc">Organise parents by class. Send to Darasa la 1 only or message everyone at once.</div></div>
+    <div class="feature-card"><div class="feature-icon blue">📱</div><div class="feature-title">Works on any phone</div><div class="feature-desc">Parents receive SMS on any phone, smartphone or basic button phone. No internet needed.</div></div>
+    <div class="feature-card"><div class="feature-icon green">🔒</div><div class="feature-title">Your school name</div><div class="feature-desc">Messages show your school name, not a random number. Professional and trusted.</div></div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-section" id="how-it-works">
+  <div class="how-inner">
+    <div style="text-align:center">
+      <div class="section-label">How it works</div>
+      <div class="section-title">Up and running in 24 hours</div>
+      <div class="gold-line"></div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-title">Contact us</div><div class="step-desc">WhatsApp or call us. We set up your school account the same day.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-title">Add your contacts</div><div class="step-desc">Upload parent numbers from Excel or add them one by one. Takes minutes.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-title">Start sending</div><div class="step-desc">Type your message, select a group, and send. Parents receive it instantly.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Use cases -->
+<section class="usecases-section">
+  <div class="section-label">Common use cases</div>
+  <div class="section-title">Built for how schools actually communicate</div>
+  <div class="section-sub">Two everyday examples of what schools send through Notifi.</div>
+  <div class="usecases">
+    <div class="usecase-card">
+      <div class="usecase-icon">💰</div>
+      <div class="usecase-title">Fee reminders that get read</div>
+      <div class="usecase-desc">A single SMS reaches every parent's phone directly — no printed notice that gets lost in a school bag, no missed deadlines.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">📢</div>
+      <div class="usecase-title">Announcements without app installs</div>
+      <div class="usecase-desc">Meeting notices, exam results and emergency alerts go straight to any phone — smartphone or basic — no data connection needed to receive them.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="pub-cta" id="contact">
+  <div class="pub-cta-title">Ready to connect with every parent?</div>
+  <div class="pub-cta-sub">We set up your account and train your team. All included, no extra cost.</div>
+  <a href="https://wa.me/255754938633?text=Habari%2C%20nataka%20kujua%20zaidi%20kuhusu%20Notifi%20SMS%20platform" class="btn-gold" target="_blank">WhatsApp us now</a>
+  <div class="pub-cta-note">Or call +255 754 938 633 · Monday to Saturday, 8am to 6pm</div>
+</section>
+
 {% endblock %}

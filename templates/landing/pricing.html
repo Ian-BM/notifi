@@ -1,19 +1,294 @@
 {% extends 'base_public.html' %}
+{% load static %}
 
-{% block title %}Pricing — Notifi{% endblock %}
-{% block canonical_url %}https://notifi.co.tz/pricing/{% endblock %}
-{% block og_url %}https://notifi.co.tz/pricing/{% endblock %}
+{% block title %}Pricing — Notifi SMS Platform{% endblock %}
+{% block description %}Simple, transparent pricing for schools. Monthly plans from TSh 40,000 or pay as you go at TSh 50 per SMS. No contracts, no hidden fees.{% endblock %}
+{% block canonical %}https://notifi.co.tz/pricing/{% endblock %}
+{% block og_title %}Notifi Pricing — SMS Plans for Schools{% endblock %}
+
+{% block extra_css %}
+<style>
+.pricing-hero { padding: 3.5rem 2rem 1.5rem; text-align: center; max-width: 700px; margin: 0 auto; }
+.pricing-hero h1 { font-size: 38px; font-weight: 700; color: #1e293b; letter-spacing: -1px; margin-bottom: 0.75rem; }
+.pricing-hero h1 em { font-style: italic; color: #1a56db; }
+.pricing-hero p { font-size: 16px; color: #64748b; line-height: 1.7; margin-bottom: 2rem; }
+.toggle-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 2.5rem; }
+.toggle-label { font-size: 14px; color: #64748b; font-weight: 500; }
+.toggle-label.active { color: #1a56db; font-weight: 600; }
+.toggle { width: 52px; height: 28px; background: #e2e8f0; border-radius: 14px; cursor: pointer; position: relative; transition: background 0.2s; border: none; }
+.toggle.on { background: #1a56db; }
+.toggle-thumb { width: 22px; height: 22px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: left 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+.toggle.on .toggle-thumb { left: 27px; }
+.save-badge { background: #fef3c7; color: #854f0b; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 0.5px solid #fcd34d; }
+.plans-wrap { max-width: 1000px; margin: 0 auto; padding: 0 2rem 3rem; }
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.25rem; }
+.plan { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 16px; padding: 2rem; position: relative; }
+.plan.popular { border: 2px solid #1a56db; box-shadow: 0 4px 24px rgba(26,86,219,0.13); }
+.plan.basic-plan { opacity: 0.85; }
+.popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #1a56db; color: #fff; font-size: 11px; font-weight: 600; padding: 4px 16px; border-radius: 20px; white-space: nowrap; }
+.best-value-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #f59e0b; color: #1e293b; font-size: 11px; font-weight: 600; padding: 4px 16px; border-radius: 20px; white-space: nowrap; }
+.plan-name { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+.plan-name.blue { color: #1a56db; }
+.plan-name.gold { color: #d97706; }
+.plan-price { font-size: 36px; font-weight: 700; color: #1e293b; letter-spacing: -1px; line-height: 1; }
+.plan-price span { font-size: 14px; font-weight: 400; color: #64748b; }
+.plan-persms { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 20px; margin: 8px 0 4px; font-weight: 600; }
+.persms-red { background: #fef2f2; color: #dc2626; }
+.persms-blue { background: #e6f1fb; color: #1a56db; }
+.persms-green { background: #ecfdf5; color: #059669; }
+.plan-sms { font-size: 13px; color: #64748b; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 0.5px solid #e2e8f0; }
+.plan-sms strong { color: #1e293b; font-weight: 600; }
+.plan-features { list-style: none; margin-bottom: 1.75rem; }
+.plan-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #1e293b; margin-bottom: 10px; line-height: 1.5; }
+.feat-check { width: 18px; height: 18px; border-radius: 50%; background: #ecfdf5; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #059669; flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+.feat-cross { width: 18px; height: 18px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8; flex-shrink: 0; margin-top: 1px; }
+.feature-muted { color: #94a3b8; }
+.btn-plan { width: 100%; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; text-decoration: none; display: block; text-align: center; }
+.btn-plan-blue { background: #1a56db; color: #fff; }
+.btn-plan-blue:hover { background: #1648c0; }
+.btn-plan-gold { background: #f59e0b; color: #1e293b; }
+.btn-plan-gold:hover { background: #d97706; }
+.btn-plan-outline { background: #fff; color: #64748b; border: 1.5px solid #e2e8f0; }
+.btn-plan-outline:hover { border-color: #1a56db; color: #1a56db; }
+.per-sms-note { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 8px; }
+.payg-card { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2rem; }
+.payg-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+.payg-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+.payg-amount { font-size: 32px; font-weight: 700; color: #1e293b; letter-spacing: -1px; text-align: center; }
+.payg-amount span { font-size: 14px; font-weight: 400; color: #64748b; }
+.payg-badge { display: inline-block; background: #fef3c7; color: #854f0b; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 4px; }
+.payg-btn { margin-top: 12px; padding: 10px 24px; background: #1e293b; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+.credit-packs { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; margin-top: 1.25rem; }
+.credit-title { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 1rem; }
+.credit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.credit-item { background: #f8faff; border: 0.5px solid #e2e8f0; border-radius: 10px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.15s; }
+.credit-item:hover, .credit-item.sel { border-color: #1a56db; background: #e6f1fb; }
+.credit-amount { font-size: 16px; font-weight: 700; color: #1e293b; }
+.credit-sms { font-size: 12px; color: #64748b; margin: 3px 0; }
+.credit-per { font-size: 11px; font-weight: 600; color: #1a56db; }
+.compare-section { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+.compare-table { width: 100%; border-collapse: collapse; background: #fff; border: 0.5px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.compare-table th { padding: 12px 16px; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: #f8faff; border-bottom: 0.5px solid #e2e8f0; text-align: center; }
+.compare-table th:first-child { text-align: left; }
+.compare-table td { padding: 11px 16px; font-size: 13px; color: #1e293b; border-bottom: 0.5px solid #e2e8f0; text-align: center; }
+.compare-table td:first-child { text-align: left; color: #64748b; font-weight: 500; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: #f8faff; }
+.col-std { background: #e6f1fb !important; }
+.t-check { color: #059669; font-weight: 700; }
+.t-cross { color: #cbd5e1; }
+.t-val { font-weight: 600; color: #1e293b; }
+.t-red { color: #dc2626; font-weight: 600; }
+.faq-section { padding: 2rem; max-width: 700px; margin: 0 auto; }
+.faq-item { background: #fff; border: 0.5px solid #e2e8f0; border-radius: 10px; margin-bottom: 0.75rem; overflow: hidden; }
+.faq-q { padding: 1rem 1.25rem; font-size: 14px; font-weight: 600; color: #1e293b; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: none; background: none; width: 100%; text-align: left; }
+.faq-arrow { font-size: 11px; color: #94a3b8; transition: transform 0.2s; }
+.faq-a { padding: 0 1.25rem 1rem; font-size: 13px; color: #64748b; line-height: 1.7; display: none; }
+.faq-item.open .faq-a { display: block; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+@media (max-width: 768px) {
+  .plans { grid-template-columns: 1fr; }
+  .payg-card { grid-template-columns: 1fr; text-align: center; }
+  .credit-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-hero h1 { font-size: 28px; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="public-hero">
-  <h1>Simple, pay-as-you-go SMS credits</h1>
-  <p>
-    Every school gets its own SMS balance — top up as needed, no monthly
-    contracts. Get in touch for current per-credit rates and volume pricing
-    for your school.
-  </p>
-  <div class="public-hero-actions">
-    <a href="{% url 'login' %}" class="btn btn-gold btn-lg">Sign in to your school</a>
+
+<div class="pricing-hero">
+  <div class="section-label">Pricing</div>
+  <h1>Simple pricing.<br><em>No surprises.</em></h1>
+  <p>Choose a monthly plan or buy credits as you need them. No setup fees, no contracts, no hidden charges. Pay via M-Pesa.</p>
+  <div class="toggle-wrap">
+    <span class="toggle-label active" id="lbl-m">Monthly</span>
+    <button class="toggle" id="tog" onclick="toggleBilling()" aria-label="Toggle annual billing"><div class="toggle-thumb"></div></button>
+    <span class="toggle-label" id="lbl-a">Annual <span class="save-badge">Save 20%</span></span>
   </div>
 </div>
+
+<div class="plans-wrap">
+  <div class="plans">
+
+    <div class="plan basic-plan">
+      <div class="plan-name">Basic</div>
+      <div class="plan-price" id="p-basic">TSh 40,000<span>/mo</span></div>
+      <div class="plan-persms persms-red">TSh 80 per SMS</div>
+      <div class="plan-sms">Includes <strong>500 SMS</strong>/month<br>Extra SMS: TSh 45 each</div>
+      <ul class="plan-features">
+        <li><div class="feat-check">✓</div>Bulk SMS sending</li>
+        <li><div class="feat-check">✓</div>Contact groups</li>
+        <li><div class="feat-check">✓</div>5 message templates</li>
+        <li><div class="feat-check">✓</div>Delivery reports</li>
+        <li><div class="feat-check">✓</div>WhatsApp support</li>
+        <li><div class="feat-cross">✗</div><span class="feature-muted">Custom sender name</span></li>
+        <li><div class="feat-cross">✗</div><span class="feature-muted">CSV import</span></li>
+        <li><div class="feat-cross">✗</div><span class="feature-muted">Priority support</span></li>
+      </ul>
+      <a href="https://wa.me/255754938633?text=Nataka%20Basic%20plan%20ya%20Notifi" class="btn-plan btn-plan-outline" target="_blank">Get started</a>
+      <div class="per-sms-note">More expensive per SMS than Standard</div>
+    </div>
+
+    <div class="plan popular">
+      <div class="popular-badge">Most popular</div>
+      <div class="plan-name blue">Standard</div>
+      <div class="plan-price" id="p-std">TSh 70,000<span>/mo</span></div>
+      <div class="plan-persms persms-blue">TSh 70 per SMS</div>
+      <div class="plan-sms">Includes <strong>1,000 SMS</strong>/month<br>Extra SMS: TSh 40 each</div>
+      <ul class="plan-features">
+        <li><div class="feat-check">✓</div>Bulk SMS sending</li>
+        <li><div class="feat-check">✓</div>Contact groups</li>
+        <li><div class="feat-check">✓</div>Unlimited templates</li>
+        <li><div class="feat-check">✓</div>Delivery reports</li>
+        <li><div class="feat-check">✓</div>WhatsApp support</li>
+        <li><div class="feat-check">✓</div>Custom sender name</li>
+        <li><div class="feat-check">✓</div>CSV import</li>
+        <li><div class="feat-cross">✗</div><span class="feature-muted">Priority support</span></li>
+      </ul>
+      <a href="https://wa.me/255754938633?text=Nataka%20Standard%20plan%20ya%20Notifi" class="btn-plan btn-plan-blue" target="_blank">Get started</a>
+      <div class="per-sms-note">Best value for most schools</div>
+    </div>
+
+    <div class="plan">
+      <div class="best-value-badge">Best value per SMS</div>
+      <div class="plan-name gold">Premium</div>
+      <div class="plan-price" id="p-prem">TSh 120,000<span>/mo</span></div>
+      <div class="plan-persms persms-green">TSh 48 per SMS</div>
+      <div class="plan-sms">Includes <strong>2,500 SMS</strong>/month<br>Extra SMS: TSh 35 each</div>
+      <ul class="plan-features">
+        <li><div class="feat-check">✓</div>Bulk SMS sending</li>
+        <li><div class="feat-check">✓</div>Contact groups</li>
+        <li><div class="feat-check">✓</div>Unlimited templates</li>
+        <li><div class="feat-check">✓</div>Delivery reports</li>
+        <li><div class="feat-check">✓</div>WhatsApp support</li>
+        <li><div class="feat-check">✓</div>Custom sender name</li>
+        <li><div class="feat-check">✓</div>CSV import</li>
+        <li><div class="feat-check">✓</div>Priority support</li>
+      </ul>
+      <a href="https://wa.me/255754938633?text=Nataka%20Premium%20plan%20ya%20Notifi" class="btn-plan btn-plan-gold" target="_blank">Get started</a>
+      <div class="per-sms-note">For larger schools sending 1,000+ SMS</div>
+    </div>
+
+  </div>
+
+  <div class="payg-card">
+    <div>
+      <div class="payg-title">Pay as you go</div>
+      <div class="payg-desc">No monthly commitment. Buy SMS credits anytime and use them whenever you need. Credits never expire. Perfect for smaller schools or irregular sending.</div>
+      <div style="margin-top:10px;font-size:12px;color:#94a3b8">Tip: Schools that send regularly save more with a monthly plan.</div>
+    </div>
+    <div style="text-align:center">
+      <div class="payg-amount">TSh 50<span>/SMS</span></div>
+      <div class="payg-badge">No subscription needed</div>
+      <div><a href="https://wa.me/255754938633?text=Nataka%20kununua%20SMS%20credits%20za%20Notifi" class="payg-btn" target="_blank">Buy credits</a></div>
+    </div>
+  </div>
+
+  <div class="credit-packs">
+    <div class="credit-title">Credit packages — buy more, pay less per SMS</div>
+    <div class="credit-grid">
+      <div class="credit-item sel" onclick="selC(this)"><div class="credit-amount">TSh 12,500</div><div class="credit-sms">250 SMS</div><div class="credit-per">TSh 50/SMS</div></div>
+      <div class="credit-item" onclick="selC(this)"><div class="credit-amount">TSh 22,500</div><div class="credit-sms">500 SMS</div><div class="credit-per">TSh 45/SMS</div></div>
+      <div class="credit-item" onclick="selC(this)"><div class="credit-amount">TSh 40,000</div><div class="credit-sms">1,000 SMS</div><div class="credit-per">TSh 40/SMS</div></div>
+      <div class="credit-item" onclick="selC(this)"><div class="credit-amount">TSh 87,500</div><div class="credit-sms">2,500 SMS</div><div class="credit-per">TSh 35/SMS</div></div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:12px;color:#94a3b8;text-align:center">Contact us on WhatsApp to purchase. Added to your account within minutes after M-Pesa payment.</div>
+  </div>
+</div>
+
+<div class="compare-section">
+  <div class="section-label">Compare</div>
+  <div class="section-title" style="margin-bottom:1.25rem">Plan comparison</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:32%">Feature</th>
+        <th>Pay as you go</th>
+        <th>Basic</th>
+        <th class="col-std" style="color:#1a56db">Standard</th>
+        <th>Premium</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Monthly price</td><td>None</td><td class="t-val">TSh 40,000</td><td class="col-std t-val">TSh 70,000</td><td class="t-val">TSh 120,000</td></tr>
+      <tr><td>SMS included</td><td>None</td><td>500</td><td class="col-std t-val">1,000</td><td class="t-val">2,500</td></tr>
+      <tr><td>Cost per SMS</td><td class="t-red">TSh 50</td><td class="t-red">TSh 80</td><td class="col-std" style="color:#1a56db;font-weight:600">TSh 70</td><td style="color:#059669;font-weight:600">TSh 48</td></tr>
+      <tr><td>Extra SMS rate</td><td>TSh 50</td><td>TSh 45</td><td class="col-std t-val">TSh 40</td><td class="t-val">TSh 35</td></tr>
+      <tr><td>Custom sender name</td><td><span class="t-cross">✗</span></td><td><span class="t-cross">✗</span></td><td class="col-std"><span class="t-check">✓</span></td><td><span class="t-check">✓</span></td></tr>
+      <tr><td>CSV import</td><td><span class="t-cross">✗</span></td><td><span class="t-cross">✗</span></td><td class="col-std"><span class="t-check">✓</span></td><td><span class="t-check">✓</span></td></tr>
+      <tr><td>Unlimited templates</td><td><span class="t-cross">✗</span></td><td><span class="t-cross">✗</span></td><td class="col-std"><span class="t-check">✓</span></td><td><span class="t-check">✓</span></td></tr>
+      <tr><td>Priority support</td><td><span class="t-cross">✗</span></td><td><span class="t-cross">✗</span></td><td class="col-std"><span class="t-cross">✗</span></td><td><span class="t-check">✓</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="faq-section">
+  <div class="section-label">FAQ</div>
+  <div style="font-size:22px;font-weight:700;color:#1e293b;margin-bottom:1.25rem">Common questions</div>
+  <div class="faq-item open">
+    <button class="faq-q" onclick="tFaq(this)">How do I pay? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">We accept M-Pesa, Tigo Pesa, and Airtel Money. After payment confirmation your account is activated within minutes. No bank cards or transfers needed.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="tFaq(this)">Why is Basic more expensive per SMS than Standard? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Basic is designed for schools that want to try the platform before committing. If you send SMS regularly, Standard gives you better value per message and more features. Most schools that start on Basic switch to Standard within the first month.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="tFaq(this)">Do unused SMS roll over? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Monthly subscription SMS do not roll over to the next month. Pay as you go credits never expire and stay in your account until used.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="tFaq(this)">Can I upgrade or downgrade my plan? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Yes, anytime. Just WhatsApp us and we will adjust your plan immediately. No penalties, no waiting period.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="tFaq(this)">What is a custom sender name? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Instead of parents receiving SMS from a random number, they see your school name. For example ST-AGNES or MARYHILL. Available on Standard and Premium plans. Requires your school registration certificate and takes 1 to 14 days to activate.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="tFaq(this)">Is there a contract or lock-in period? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">No contracts, no lock-in. Pay month to month and cancel anytime by contacting us on WhatsApp. We believe the service should speak for itself.</div>
+  </div>
+</div>
+
+<section class="pub-cta">
+  <div class="pub-cta-title">Not sure which plan fits your school?</div>
+  <div class="pub-cta-sub">WhatsApp us and we will recommend the right plan based on your school size and sending needs.</div>
+  <a href="https://wa.me/255754938633?text=Nataka%20kujua%20plan%20ipi%20inafaa%20shule%20yangu" class="btn-gold" target="_blank">WhatsApp us now</a>
+  <div class="pub-cta-note">Or call +255 754 938 633 · Monday to Saturday, 8am to 6pm</div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+var isA = false;
+var base = { basic: 40000, std: 70000, prem: 120000 };
+
+function toggleBilling() {
+  isA = !isA;
+  document.getElementById('tog').classList.toggle('on', isA);
+  document.getElementById('lbl-m').classList.toggle('active', !isA);
+  document.getElementById('lbl-a').classList.toggle('active', isA);
+  var m = isA ? 0.8 : 1;
+  var f = function(n) { return 'TSh ' + Math.round(n * m).toLocaleString(); };
+  document.getElementById('p-basic').innerHTML = f(base.basic) + '<span>/mo</span>';
+  document.getElementById('p-std').innerHTML = f(base.std) + '<span>/mo</span>';
+  document.getElementById('p-prem').innerHTML = f(base.prem) + '<span>/mo</span>';
+}
+
+function selC(el) {
+  document.querySelectorAll('.credit-item').forEach(function(c) { c.classList.remove('sel'); });
+  el.classList.add('sel');
+}
+
+function tFaq(el) {
+  var item = el.parentElement;
+  var open = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(f) { f.classList.remove('open'); });
+  if (!open) item.classList.add('open');
+}
+</script>
 {% endblock %}

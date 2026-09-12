@@ -1,0 +1,304 @@
+/* ── Variables ─────────────────────────────────────── */
+:root {
+  --blue: #1a56db;
+  --blue-dark: #1648c0;
+  --blue-light: #e6f1fb;
+  --navy: #1e293b;
+  --gold: #f59e0b;
+  --gold-light: #fef3c7;
+  --gold-dark: #d97706;
+  --white: #ffffff;
+  --bg: #f8faff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --success: #059669;
+  --success-bg: #ecfdf5;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── Navigation ─────────────────────────────────────── */
+.pub-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--white);
+  border-bottom: 0.5px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.pub-logo {
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--navy);
+  font-family: Georgia, 'Times New Roman', serif;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.pub-logo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: absolute;
+  top: -2px;
+  right: -5px;
+  display: inline-block;
+}
+
+.pub-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pub-nav-link {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.pub-nav-link:hover,
+.pub-nav-link.active { color: var(--blue); font-weight: 500; }
+
+.pub-btn-nav {
+  padding: 8px 18px;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s;
+}
+
+.pub-btn-nav:hover { background: var(--blue-dark); }
+
+.pub-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--navy);
+  padding: 4px 8px;
+}
+
+/* Mobile nav */
+.pub-mobile-nav {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100vh;
+  background: var(--white);
+  z-index: 2000;
+  padding: 5rem 2rem 2rem;
+  transition: right 0.3s ease;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pub-mobile-nav.open { right: 0; }
+
+.pub-mobile-link {
+  padding: 12px 0;
+  font-size: 16px;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.pub-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1999;
+  display: none;
+}
+
+.pub-overlay.open { display: block; }
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn-primary {
+  padding: 14px 30px;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(26,86,219,0.35);
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn-outline-blue {
+  padding: 14px 30px;
+  background: var(--white);
+  color: var(--blue);
+  border: 2px solid var(--blue);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.15s;
+}
+
+.btn-outline-blue:hover { background: var(--blue-light); }
+
+.btn-gold {
+  padding: 14px 32px;
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245,158,11,0.4);
+  transition: background 0.15s;
+}
+
+.btn-gold:hover { background: var(--gold-dark); }
+
+/* ── Section helpers ─────────────────────────────────── */
+.section-label {
+  font-size: 11px;
+  color: var(--blue);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 540px;
+  margin-bottom: 2rem;
+}
+
+.gold-line {
+  height: 3px;
+  background: var(--gold);
+  width: 60px;
+  border-radius: 2px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+.pub-footer {
+  background: var(--white);
+  border-top: 0.5px solid var(--border);
+  padding: 2rem;
+}
+
+.pub-footer-inner { text-align: center; }
+
+.pub-footer-logo {
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--navy);
+  font-family: Georgia, serif;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.pub-footer-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pub-footer-link {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.pub-footer-link:hover { color: var(--blue); }
+
+.pub-footer-copy { font-size: 12px; color: var(--text-muted); }
+
+/* ── CTA Section ─────────────────────────────────────── */
+.pub-cta {
+  background: var(--blue);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.pub-cta-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+
+.pub-cta-sub {
+  font-size: 15px;
+  color: #bfdbfe;
+  margin-bottom: 2rem;
+}
+
+.pub-cta-note {
+  font-size: 12px;
+  color: #93c5fd;
+  margin-top: 1rem;
+}
+
+/* ── Mobile responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .pub-nav-links { display: none; }
+  .pub-hamburger { display: block; }
+  .pub-nav { padding: 1rem; }
+  .section-title { font-size: 24px; }
+  .pub-cta { padding: 3rem 1.5rem; }
+  .pub-cta-title { font-size: 24px; }
+}
